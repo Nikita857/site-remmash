@@ -40,7 +40,7 @@ export function Header() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="flex items-center gap-1 min-w-0">
-              <MapPin className="w-4 h-4 flex-shrink-0" />
+              <MapPin className="w-4 h-4 shrink-0" />
               <span className="truncate">
                 {SITE_CONFIG.contact.address.replace("Россия, ", "")}
               </span>
@@ -83,7 +83,7 @@ export function Header() {
                   transition={{ duration: 0.3, delay: 0.6 }}
                   whileHover={{ y: -2 }}
                 >
-                  <User className="w-4 h-4 mr-1 flex-shrink-0" />
+                  <User className="w-4 h-4 mr-1 shrink-0" />
                   Выйти
                   <motion.div
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"

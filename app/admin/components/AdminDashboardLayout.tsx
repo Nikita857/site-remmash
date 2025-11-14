@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { Sidebar, StatsOverview } from "./common";
 import ProductsPageContent from "./ProductsPageContent";
 import UsersPageContent from "./UsersPageContent";
+import ContactRequestsPageContent from "./ContactRequestsPageContent";
 
 interface AdminDashboardLayoutProps {
   isAdmin: boolean;
@@ -16,7 +17,7 @@ export default function AdminDashboardLayout({
   isAdmin,
 }: AdminDashboardLayoutProps) {
   const [activeView, setActiveView] = useState<
-    "dashboard" | "products" | "users" | "certificates" | "orders"
+    "dashboard" | "products" | "users" | "certificates" | "requests"
   >("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -86,6 +87,17 @@ export default function AdminDashboardLayout({
               transition={{ duration: 0.3 }}
             >
               {/* <CertificatesTable /> */}
+            </motion.div>
+          )}
+
+          {activeView === "requests" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ContactRequestsPageContent />
             </motion.div>
           )}
         </div>

@@ -171,8 +171,6 @@ export interface ContactRequest {
   email: string | null;
   message: string | null;
   status: 'new' | 'in_progress' | 'completed';
-  assignedTo: string | null;
-  notes: string | null;
   contactedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;

@@ -16,8 +16,8 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 
 interface SidebarProps {
-  activeView: 'dashboard' | 'products' | 'users' | 'certificates' | 'orders';
-  setActiveView: (view: 'dashboard' | 'products' | 'users' | 'certificates' | 'orders') => void;
+  activeView: 'dashboard' | 'products' | 'users' | 'certificates' | 'requests';
+  setActiveView: (view: 'dashboard' | 'products' | 'users' | 'certificates' | 'requests') => void;
   isOpen: boolean;
   toggleSidebar: () => void;
   isAdmin: boolean;
@@ -27,7 +27,7 @@ const menuItems = [
   { id: 'dashboard', label: 'Главная', icon: LayoutDashboard },
   { id: 'products', label: 'Продукция', icon: Package },
   { id: 'certificates', label: 'Сертификаты', icon: FileText },
-  { id: 'orders', label: 'Заявки', icon: FileText },
+  { id: 'requests', label: 'Заявки', icon: FileText },
 ];
 
 const adminMenuItems = [
@@ -42,7 +42,7 @@ export function Sidebar({ activeView, setActiveView, isOpen, toggleSidebar, isAd
     });
   }, []);
 
-  const handleMenuItemClick = useCallback((viewId: 'dashboard' | 'products' | 'users' | 'certificates' | 'orders') => {
+  const handleMenuItemClick = useCallback((viewId: 'dashboard' | 'products' | 'users' | 'certificates' | 'requests') => {
     // Проверяем, является ли пользователь администратором при попытке доступа к вкладке "Пользователи"
     if (viewId === 'users' && !isAdmin) {
       return; // Не изменяем активный вид, если пользователь не администратор
