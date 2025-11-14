@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, Fragment, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { ContactRequest } from "@/types";
 import {
   ContactRequestTableHeader,
@@ -11,7 +10,10 @@ import {
 
 interface ContactRequestsTableProps {
   initialRequests: ContactRequest[];
-  onUpdateStatus: (id: string, status: 'new' | 'in_progress' | 'completed') => void;
+  onUpdateStatus: (
+    id: string,
+    status: "new" | "in_progress" | "completed"
+  ) => void;
   onDelete: (id: string) => void;
 }
 
@@ -21,7 +23,8 @@ export function ContactRequestsTable({
   onDelete,
 }: ContactRequestsTableProps) {
   const [requests, setRequests] = useState<ContactRequest[]>(initialRequests);
-  const [filteredRequests, setFilteredRequests] = useState<ContactRequest[]>(initialRequests);
+  const [filteredRequests, setFilteredRequests] =
+    useState<ContactRequest[]>(initialRequests);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -33,8 +36,10 @@ export function ContactRequestsTable({
       (request) =>
         request.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         request.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (request.email && request.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (request.message && request.message.toLowerCase().includes(searchTerm.toLowerCase()))
+        (request.email &&
+          request.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (request.message &&
+          request.message.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     setFilteredRequests(filtered);
@@ -63,68 +68,82 @@ export function ContactRequestsTable({
   }, []);
 
   // Функция для удаления заявки с подтверждением и проверкой статуса
-  const handleDeleteRequest = useCallback(async (id: string) => {
-    const request = requests.find(r => r.id === id);
-    
-    if (!request) {
-      return;
-    }
-    
-    // Проверяем статус заявки
-    if (request.status === 'new') {
-      alert('Нельзя удалить новую заявку. Сначала измените её статус на "в процессе" или "завершена".');
-      return;
-    }
-    
-    if (!window.confirm('Вы уверены, что хотите удалить эту заявку? Отменить это действие будет невозможно.')) {
-      return;
-    }
+  const handleDeleteRequest = useCallback(
+    async (id: string) => {
+      const request = requests.find((r) => r.id === id);
 
-    try {
-      // Удаляем заявку из локального состояния для мгновенного обновления UI
-      setRequests(prev => prev.filter(request => request.id !== id));
-      setFilteredRequests(prev => prev.filter(request => request.id !== id));
+      if (!request) {
+        return;
+      }
 
-      // Вызываем функцию удаления из пропсов
-      await onDelete(id);
-    } catch (error) {
-      // Если произошла ошибка, откатываем локальное удаление
-      console.error('Ошибка при удалении заявки:', error);
-      
-      // Обновляем данные, чтобы отобразить актуальное состояние из API
-      // (в реальной реализации нужно будет использовать refreshRequests)
-    }
-  }, [requests, onDelete]);
+      // Проверяем статус заявки
+      if (request.status === "new") {
+        alert(
+          'Нельзя удалить новую заявку. Сначала измените её статус на "в процессе" или "завершена".'
+        );
+        return;
+      }
+
+      if (
+        !window.confirm(
+          "Вы уверены, что хотите удалить эту заявку? Отменить это действие будет невозможно."
+        )
+      ) {
+        return;
+      }
+
+      try {
+        // Удаляем заявку из локального состояния для мгновенного обновления UI
+        setRequests((prev) => prev.filter((request) => request.id !== id));
+        setFilteredRequests((prev) =>
+          prev.filter((request) => request.id !== id)
+        );
+
+        // Вызываем функцию удаления из пропсов
+        await onDelete(id);
+      } catch (error) {
+        // Если произошла ошибка, откатываем локальное удаление
+        console.error("Ошибка при удалении заявки:", error);
+
+        // Обновляем данные, чтобы отобразить актуальное состояние из API
+        // (в реальной реализации нужно будет использовать refreshRequests)
+      }
+    },
+    [requests, onDelete]
+  );
 
   // Функция для обновления статуса с мгновенным обновлением UI
-  const handleUpdateStatus = useCallback(async (id: string, status: 'new' | 'in_progress' | 'completed') => {
-    // Обновляем статус в локальном состоянии для мгновенного обновления UI
-    setRequests(prev => 
-      prev.map(request => 
-        request.id === id 
-          ? { ...request, status, updatedAt: new Date() } 
-          : request
-      )
-    );
-    setFilteredRequests(prev => 
-      prev.map(request => 
-        request.id === id 
-          ? { ...request, status, updatedAt: new Date() } 
-          : request
-      )
-    );
+  const handleUpdateStatus = useCallback(
+    async (id: string, status: "new" | "in_progress" | "completed") => {
+      // Обновляем статус в локальном состоянии для мгновенного обновления UI
+      setRequests((prev) =>
+        prev.map((request) =>
+          request.id === id
+            ? { ...request, status, updatedAt: new Date() }
+            : request
+        )
+      );
+      setFilteredRequests((prev) =>
+        prev.map((request) =>
+          request.id === id
+            ? { ...request, status, updatedAt: new Date() }
+            : request
+        )
+      );
 
-    try {
-      // Вызываем функцию обновления статуса из пропсов
-      await onUpdateStatus(id, status);
-    } catch (error) {
-      // Если произошла ошибка, откатываем локальное изменение
-      console.error('Ошибка при обновлении статуса:', error);
-      
-      // Обновляем данные, чтобы отобразить актуальное состояние из API
-      // (в реальной реализации нужно будет использовать refreshRequests)
-    }
-  }, [onUpdateStatus]);
+      try {
+        // Вызываем функцию обновления статуса из пропсов
+        await onUpdateStatus(id, status);
+      } catch (error) {
+        // Если произошла ошибка, откатываем локальное изменение
+        console.error("Ошибка при обновлении статуса:", error);
+
+        // Обновляем данные, чтобы отобразить актуальное состояние из API
+        // (в реальной реализации нужно будет использовать refreshRequests)
+      }
+    },
+    [onUpdateStatus]
+  );
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value);
@@ -205,7 +224,7 @@ export function ContactRequestsTable({
                                 Email
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 font-medium">
-                                {request.email || '—'}
+                                {request.email || "—"}
                               </dd>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
@@ -213,11 +232,11 @@ export function ContactRequestsTable({
                                 Статус
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 font-medium">
-                                {request.status === 'new' 
-                                  ? 'Новая' 
-                                  : request.status === 'in_progress' 
-                                    ? 'В процессе' 
-                                    : 'Завершена'}
+                                {request.status === "new"
+                                  ? "Новая"
+                                  : request.status === "in_progress"
+                                  ? "В процессе"
+                                  : "Завершена"}
                               </dd>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm md:col-span-2">
@@ -225,7 +244,7 @@ export function ContactRequestsTable({
                                 Сообщение
                               </dt>
                               <dd className="mt-1 text-sm text-gray-900 font-medium">
-                                {request.message || '—'}
+                                {request.message || "—"}
                               </dd>
                             </div>
                             <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
@@ -245,7 +264,11 @@ export function ContactRequestsTable({
                               <dd className="mt-1 text-sm text-gray-900 font-medium">
                                 {new Date(request.createdAt).toLocaleTimeString(
                                   "ru-RU",
-                                  { hour: '2-digit', minute: '2-digit', second: '2-digit' }
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                  }
                                 )}
                               </dd>
                             </div>
@@ -266,7 +289,11 @@ export function ContactRequestsTable({
                               <dd className="mt-1 text-sm text-gray-900 font-medium">
                                 {new Date(request.updatedAt).toLocaleTimeString(
                                   "ru-RU",
-                                  { hour: '2-digit', minute: '2-digit', second: '2-digit' }
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                  }
                                 )}
                               </dd>
                             </div>

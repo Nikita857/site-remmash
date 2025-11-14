@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 interface ContactRequestTablePaginationProps {
   currentPage: number;
@@ -17,7 +17,7 @@ export function ContactRequestTablePagination({
   totalItems,
   itemsPerPage,
   startIndex,
-  onPageChange
+  onPageChange,
 }: ContactRequestTablePaginationProps) {
   const getPageNumbers = () => {
     const pages = [];
@@ -47,10 +47,10 @@ export function ContactRequestTablePagination({
   return (
     <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div className="text-sm text-gray-700">
-        Показано <span className="font-medium">{startIndex + 1}</span> -{' '}
+        Показано <span className="font-medium">{startIndex + 1}</span> -{" "}
         <span className="font-medium">
           {Math.min(startIndex + itemsPerPage, totalItems)}
-        </span>{' '}
+        </span>{" "}
         из <span className="font-medium">{totalItems}</span> заявок
       </div>
       <div className="flex items-center space-x-2">
@@ -61,19 +61,33 @@ export function ContactRequestTablePagination({
           disabled={currentPage === 1}
           className="flex items-center"
         >
-          <svg className="w-4 h-4 mr-1 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg
+            className="w-4 h-4 mr-1 transform rotate-90"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
           Назад
         </Button>
 
-        {getPageNumbers().map(pageNum => (
+        {getPageNumbers().map((pageNum) => (
           <Button
             key={pageNum}
             variant={currentPage === pageNum ? "default" : "outline"}
             size="sm"
             onClick={() => onPageChange(pageNum)}
-            className={currentPage === pageNum ? "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)]" : ""}
+            className={
+              currentPage === pageNum
+                ? "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)]"
+                : ""
+            }
           >
             {pageNum}
           </Button>
@@ -87,8 +101,18 @@ export function ContactRequestTablePagination({
           className="flex items-center"
         >
           Вперед
-          <svg className="w-4 h-4 ml-1 transform -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg
+            className="w-4 h-4 ml-1 transform -rotate-90"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </Button>
       </div>

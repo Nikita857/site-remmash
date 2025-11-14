@@ -1,7 +1,4 @@
-'use client';
-
-import { useState } from 'react';
-import { ContactRequest } from '@/types';
+"use client";
 
 interface ContactRequestTableHeaderProps {
   searchTerm: string;
@@ -10,7 +7,7 @@ interface ContactRequestTableHeaderProps {
 
 export function ContactRequestTableHeader({
   searchTerm,
-  onSearchChange
+  onSearchChange,
 }: ContactRequestTableHeaderProps) {
   return (
     <div className="p-6 border-b border-gray-200">
