@@ -12,9 +12,6 @@ export default function ProductsPageContent() {
     products,
     loading,
     error,
-    sortByCategory,
-    sortByName,
-    sortByStatus,
     refreshProducts
   } = useAdminProducts();
 
@@ -31,7 +28,7 @@ export default function ProductsPageContent() {
     setSelectedProduct(null);
   };
 
-  const handleSaveProduct = async (productData: ProductWithCategory) => {
+  const handleSaveProduct = async () => {
     // В реальном приложении здесь будет API вызов для сохранения
     closeEditModal();
     refreshProducts(); // Перезагружаем данные после сохранения
@@ -90,7 +87,7 @@ export default function ProductsPageContent() {
         onCreateProduct={handleCreateProduct}
       />
       <EditProductModal
-        product={selectedProduct}
+        product={selectedProduct || undefined}
         isOpen={isModalOpen}
         onClose={closeEditModal}
         onSave={handleSaveProduct}

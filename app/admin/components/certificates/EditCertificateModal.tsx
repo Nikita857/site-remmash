@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Save, FileText, Calendar, Eye, EyeOff, Loader2 } from "lucide-react";
+import { X, Save, FileText, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Certificate } from "@/types";
@@ -11,7 +11,7 @@ import { cn } from "@/components/ui/utils";
 import { Textarea } from "@/components/ui/Textarea";
 
 interface EditCertificateModalProps {
-  certificate?: Certificate | null;
+  certificate: Certificate | null;
   isOpen: boolean;
   onClose: () => void;
   onSave: (certificate: Certificate) => void;
@@ -26,10 +26,18 @@ export function EditCertificateModal({
   const [formData, setFormData] = useState({
     title: certificate?.title || "",
     description: certificate?.description || "",
-    issueDate: certificate?.issueDate ? new Date(certificate.issueDate).toISOString().split('T')[0] : "",
-    expiryDate: certificate?.expiryDate ? new Date(certificate.expiryDate).toISOString().split('T')[0] : "",
+    issueDate: certificate?.issueDate
+      ? new Date(certificate.issueDate as string | Date)
+          .toISOString()
+          .split("T")[0]
+      : "",
+    expiryDate: certificate?.expiryDate
+      ? new Date(certificate.expiryDate as string | Date)
+          .toISOString()
+          .split("T")[0]
+      : "",
     image: certificate?.image || "",
-    isActive: certificate?.isActive || true,
+    isActive: certificate ? certificate.isActive : true,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -42,7 +50,7 @@ export function EditCertificateModal({
 
     // Очистка ошибки при изменении поля
     if (errors[field]) {
-      setErrors(prev => {
+      setErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[field];
         return newErrors;
@@ -69,7 +77,11 @@ export function EditCertificateModal({
       newErrors.expiryDate = "Дата окончания обязательна";
     }
 
-    if (new Date(formData.issueDate) > new Date(formData.expiryDate)) {
+    if (
+      formData.issueDate &&
+      formData.expiryDate &&
+      new Date(formData.issueDate) > new Date(formData.expiryDate)
+    ) {
       newErrors.expiryDate = "Дата окончания должна быть позже даты выдачи";
     }
 
@@ -91,19 +103,23 @@ export function EditCertificateModal({
     setIsLoading(true);
 
     try {
-      const certificateData: Certificate = {
-        id: certificate?.id || "", // ID будет пустым для новых сертификатов
-        title: formData.title,
-        description: formData.description,
-        issueDate: new Date(formData.issueDate),
-        expiryDate: new Date(formData.expiryDate),
-        image: formData.image,
-        isActive: formData.isActive,
-        createdAt: certificate?.createdAt || new Date(),
-        updatedAt: new Date(),
-      };
-
-      onSave(certificateData);
+      if (
+        formData.expiryDate !== undefined &&
+        formData.issueDate !== undefined
+      ) {
+        const certificateData: Certificate = {
+          id: certificate?.id || "", // ID будет пустым для новых сертификатов
+          title: formData.title,
+          description: formData.description,
+          issueDate: new Date(formData.issueDate) as Date,
+          expiryDate: new Date(formData.expiryDate) as Date,
+          image: formData.image,
+          isActive: formData.isActive,
+          createdAt: certificate?.createdAt || new Date(),
+          updatedAt: new Date(),
+        };
+        onSave(certificateData);
+      }
     } catch (error) {
       console.error("Ошибка при сохранении сертификата:", error);
     } finally {
@@ -151,7 +167,9 @@ export function EditCertificateModal({
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <FileText className="w-6 h-6 mr-2 text-[rgb(0,91,137)]" />
-                {certificate ? "Редактировать сертификат" : "Создать новый сертификат"}
+                {certificate
+                  ? "Редактировать сертификат"
+                  : "Создать новый сертификат"}
               </h2>
               <button
                 onClick={onClose}
@@ -165,7 +183,10 @@ export function EditCertificateModal({
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <Label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label
+                    htmlFor="title"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Название *
                   </Label>
                   <Input
@@ -175,25 +196,42 @@ export function EditCertificateModal({
                     className={cn("w-full", errors.title && "border-red-500")}
                     placeholder="Введите название сертификата"
                   />
-                  {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+                  {errors.title && (
+                    <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <Label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label
+                    htmlFor="description"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Описание *
                   </Label>
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => handleChange("description", e.target.value)}
-                    className={cn("w-full min-h-[100px]", errors.description && "border-red-500")}
+                    onChange={(e) =>
+                      handleChange("description", e.target.value)
+                    }
+                    className={cn(
+                      "w-full min-h-[100px]",
+                      errors.description && "border-red-500"
+                    )}
                     placeholder="Введите описание сертификата"
                   />
-                  {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+                  {errors.description && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.description}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <Label htmlFor="issueDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label
+                    htmlFor="issueDate"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Дата выдачи *
                   </Label>
                   <Input
@@ -201,13 +239,23 @@ export function EditCertificateModal({
                     type="date"
                     value={formData.issueDate}
                     onChange={(e) => handleChange("issueDate", e.target.value)}
-                    className={cn("w-full", errors.issueDate && "border-red-500")}
+                    className={cn(
+                      "w-full",
+                      errors.issueDate && "border-red-500"
+                    )}
                   />
-                  {errors.issueDate && <p className="text-red-500 text-sm mt-1">{errors.issueDate}</p>}
+                  {errors.issueDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.issueDate}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <Label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label
+                    htmlFor="expiryDate"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Дата окончания *
                   </Label>
                   <Input
@@ -215,13 +263,23 @@ export function EditCertificateModal({
                     type="date"
                     value={formData.expiryDate}
                     onChange={(e) => handleChange("expiryDate", e.target.value)}
-                    className={cn("w-full", errors.expiryDate && "border-red-500")}
+                    className={cn(
+                      "w-full",
+                      errors.expiryDate && "border-red-500"
+                    )}
                   />
-                  {errors.expiryDate && <p className="text-red-500 text-sm mt-1">{errors.expiryDate}</p>}
+                  {errors.expiryDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.expiryDate}
+                    </p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">
-                  <Label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label
+                    htmlFor="image"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Ссылка на изображение *
                   </Label>
                   <Input
@@ -231,7 +289,9 @@ export function EditCertificateModal({
                     className={cn("w-full", errors.image && "border-red-500")}
                     placeholder="https://example.com/certificate.jpg"
                   />
-                  {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image}</p>}
+                  {errors.image && (
+                    <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                  )}
                 </div>
               </div>
 
@@ -246,7 +306,10 @@ export function EditCertificateModal({
                   />
                 </div>
                 <div className="ml-3 text-sm">
-                  <label htmlFor="isActive" className="font-medium text-gray-700">
+                  <label
+                    htmlFor="isActive"
+                    className="font-medium text-gray-700"
+                  >
                     Активный сертификат
                   </label>
                 </div>
@@ -275,7 +338,9 @@ export function EditCertificateModal({
                   ) : (
                     <>
                       <Save className="w-4 h-4 mr-2" />
-                      {certificate ? "Сохранить изменения" : "Создать сертификат"}
+                      {certificate
+                        ? "Сохранить изменения"
+                        : "Создать сертификат"}
                     </>
                   )}
                 </Button>

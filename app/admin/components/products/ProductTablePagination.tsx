@@ -93,11 +93,10 @@ export function ProductTablePagination({
         </Button>
 
         {pageNumbers.map((pageNum, index) => {
-          // Проверяем, нужно ли добавить разделитель
           const showEllipsis = 
             index > 0 && 
-            pageNumbers[index - 1] !== pageNumbers[index] - 1 && 
-            pageNumbers[index - 1] !== 1;
+            pageNumbers[index - 1] !== undefined && 
+            pageNumbers[index - 1] !== pageNum - 1;
 
           return (
             <div key={pageNum} className="flex items-center">

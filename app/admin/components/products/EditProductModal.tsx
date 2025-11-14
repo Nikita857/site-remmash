@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/components/ui/utils";
 
 interface EditProductModalProps {
-  product?: ProductWithCategory;
+  product?: ProductWithCategory | undefined;
   isOpen: boolean;
   onClose: () => void;
   onSave: (product: ProductWithCategory) => void;
