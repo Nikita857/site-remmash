@@ -35,8 +35,8 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-      {/* Contact info bar */}
-      <div className="bg-[rgb(0,91,137)] text-white text-sm py-2">
+      {/* Contact info bar - only for desktop */}
+      <div className="bg-[rgb(0,91,137)] text-white text-sm py-2 hidden md:block">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="flex items-center gap-1 min-w-0">
@@ -53,7 +53,7 @@ export function Header() {
               <Mail className="w-4 h-4" />
               <span>{SITE_CONFIG.contact.email}</span>
             </div>
-            {/* Кнопка панели администратора - показывается только при аутентификации */}
+            {/* Кнопки панели администратора и выхода - показываются только при аутентификации */}
             <div className="flex items-center gap-2">
               {status === "authenticated" && (
                 <motion.a
@@ -312,7 +312,7 @@ export function Header() {
               {status === "authenticated" && (
                 <motion.a
                   href="/admin"
-                  className="text-black hover:bg-gray-50 hover:text-[rgb(0,91,137)] block px-3 py-2 rounded-md font-medium transition-colors"
+                  className="text-black hover:bg-gray-50 hover:text-[rgb(0,91,137)] block px-3 py-2 rounded-md font-medium transition-colors border border-gray-200 my-1"
                   onClick={() => setMobileMenuOpen(false)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -328,7 +328,7 @@ export function Header() {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full text-left text-black hover:bg-gray-50 hover:text-[rgb(0,91,137)] block px-3 py-2 rounded-md font-medium transition-colors"
+                  className="w-full text-left text-black hover:bg-gray-50 hover:text-[rgb(0,91,137)] block px-3 py-2 rounded-md font-medium transition-colors border border-gray-200 my-1"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}

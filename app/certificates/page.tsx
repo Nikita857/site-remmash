@@ -1,25 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useCertificates } from "@/hooks/useCertificates";
+import { usePublicCertificates } from "@/hooks/usePublicCertificates";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import CertificatesGrid from "./components/CertificatesGrid";
 import CertificatesHero from "./components/CertificatesHero";
 
 export default function CertificatesPage() {
-  const { certificates, loading, error } = useCertificates();
+  const { certificates, loading, error } = usePublicCertificates();
   const [currentPage, setCurrentPage] = useState(1);
   const certificatesPerPage = 6;
-
-  // Filter only active certificates
-  const activeCertificates = certificates.filter(cert => cert.isActive);
 
   // Вычисляем индексы сертификатов для текущей страницы
   const indexOfLastCertificate = currentPage * certificatesPerPage;
   const indexOfFirstCertificate = indexOfLastCertificate - certificatesPerPage;
-  const currentCertificates = activeCertificates.slice(indexOfFirstCertificate, indexOfLastCertificate);
-  const totalPages = Math.ceil(activeCertificates.length / certificatesPerPage);
+  const currentCertificates = certificates.slice(indexOfFirstCertificate, indexOfLastCertificate);
+  const totalPages = Math.ceil(certificates.length / certificatesPerPage);
 
   // Функция для переключения страниц
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
