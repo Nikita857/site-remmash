@@ -7,15 +7,17 @@ import {
   EditProductModal,
   ProductTableRow,
   ProductExpandedRow,
+  ProductTablePagination,
 } from "./products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 
 interface ProductsTableProps {
   initialProducts: ProductWithCategory[];
+  onCreateProduct?: () => void;
 }
 
-export function ProductsTable({ initialProducts }: ProductsTableProps) {
+export function ProductsTable({ initialProducts, onCreateProduct }: ProductsTableProps) {
   const [products, setProducts] =
     useState<ProductWithCategory[]>(initialProducts);
   const [filteredProducts, setFilteredProducts] =
@@ -81,7 +83,6 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
         }
       }
 
-      // В реальном приложении здесь будет API вызов для обновления статуса в базе данных
       const response = await fetch(`/api/products/${productId}/toggle-status`, {
         method: "PATCH",
         headers: {
@@ -166,6 +167,7 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
     }));
   };
 
+  
   // Пагинация
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -187,28 +189,41 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
           <h2 className="text-xl font-bold text-gray-800">
             Управление продукцией
           </h2>
-          <div className="relative">
-            <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="relative">
+              <svg
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <Input
+                type="text"
+                placeholder="Поиск продуктов..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent min-w-[250px] w-full"
               />
-            </svg>
-            <Input
-              type="text"
-              placeholder="Поиск продуктов..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent min-w-[250px]"
-            />
+            </div>
+            {onCreateProduct && (
+              <Button
+                onClick={onCreateProduct}
+                className="bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)] text-white flex items-center w-full sm:w-auto"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Добавить продукт
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -257,97 +272,14 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
 
       {/* Пагинация */}
       {totalPages > 1 && (
-        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-          <div className="text-sm text-gray-700">
-            Показано <span className="font-medium">{startIndex + 1}</span> -{" "}
-            <span className="font-medium">
-              {Math.min(startIndex + itemsPerPage, filteredProducts.length)}
-            </span>{" "}
-            из <span className="font-medium">{filteredProducts.length}</span>{" "}
-            продуктов
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="flex items-center"
-            >
-              <svg
-                className="w-4 h-4 mr-1 transform rotate-90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-              Назад
-            </Button>
-
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum: number = i + 1;
-              if (totalPages > 5) {
-                if (currentPage <= 3) {
-                  if (i < 4) pageNum = i + 1;
-                  else if (i === 4) pageNum = totalPages;
-                } else if (currentPage >= totalPages - 2) {
-                  if (i === 0) pageNum = 1;
-                  else if (i === 4) pageNum = totalPages;
-                  else if (i > 0) pageNum = totalPages - (4 - i);
-                } else {
-                  if (i === 0) pageNum = 1;
-                  else if (i === 4) pageNum = totalPages;
-                  else pageNum = currentPage - 2 + i;
-                }
-              }
-
-              return (
-                <Button
-                  key={pageNum}
-                  variant={currentPage === pageNum ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handlePageChange(pageNum)}
-                  className={
-                    currentPage === pageNum
-                      ? "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)]"
-                      : ""
-                  }
-                >
-                  {pageNum}
-                </Button>
-              );
-            })}
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="flex items-center"
-            >
-              Вперед
-              <svg
-                className="w-4 h-4 ml-1 transform -rotate-90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </Button>
-          </div>
-        </div>
+        <ProductTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredProducts.length}
+          itemsPerPage={itemsPerPage}
+          startIndex={startIndex}
+          onPageChange={handlePageChange}
+        />
       )}
 
       {/* Модальное окно редактирования */}

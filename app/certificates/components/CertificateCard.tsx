@@ -1,18 +1,10 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ImageWithFallback } from "../../../components/figma/ImageWithFallback";
 import { useState } from "react";
 import CertificateModal from "./CertificateModal";
-
-interface Certificate {
-  id: number;
-  title: string;
-  description: string;
-  issueDate: string;
-  expiryDate: string;
-  image: string;
-}
+import { Certificate } from "@/types";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
 interface CertificateCardProps {
   certificate: Certificate;
@@ -25,15 +17,40 @@ export default function CertificateCard({
 }: CertificateCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Форматирование дат
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Date(dateString).toLocaleDateString("ru-RU", options);
-  };
+  /**
+   * Format date from '2025-11-14 08:58:34.484' to 'Ноябрь-25-14'
+   */
+  function formatDate(inputDate: Date | string): string {
+    // Если передана строка, преобразуем в Date
+    const dateObj =
+      typeof inputDate === "string" ? new Date(inputDate) : inputDate;
+
+    // Проверка валидности даты
+    if (isNaN(dateObj.getTime())) {
+      throw new Error("Invalid date format. Expected: 2025-11-14 08:58:34.484");
+    }
+
+    const months = [
+      "Января",
+      "Февраля",
+      "Марта",
+      "Апреля",
+      "Мая",
+      "Июня",
+      "Июля",
+      "Августа",
+      "Сентября",
+      "Октября",
+      "Ноября",
+      "Декабря",
+    ];
+
+    const month = months[dateObj.getMonth()];
+    const year = dateObj.getFullYear().toString(); // Последние 2 цифры года
+    const day = dateObj.getDate().toString().padStart(2, "0");
+
+    return `${day} ${month} ${year}`;
+  }
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -54,7 +71,7 @@ export default function CertificateCard({
         onClick={openModal}
         whileTap={{ scale: 0.98 }}
       >
-        <div className="p-1 bg-gradient-to-r from-[rgb(0,91,137)] to-blue-600">
+        <div className="p-1 bg-linear-to-r from-[rgb(0,91,137)] to-blue-600">
           <div className="bg-white p-4">
             <ImageWithFallback
               src={certificate.image}

@@ -2,15 +2,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
-
-interface Certificate {
-  id: number;
-  title: string;
-  description: string;
-  issueDate: string;
-  expiryDate: string;
-  image: string;
-}
+import { Certificate } from "@/types";
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -24,14 +16,40 @@ export default function CertificateModal({
   certificate,
 }: CertificateModalProps) {
   // Форматирование дат
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Date(dateString).toLocaleDateString("ru-RU", options);
-  };
+  /**
+   * Format date from '2025-11-14 08:58:34.484' to 'Ноябрь-25-14'
+   */
+  function formatDate(inputDate: Date | string): string {
+    // Если передана строка, преобразуем в Date
+    const dateObj =
+      typeof inputDate === "string" ? new Date(inputDate) : inputDate;
+
+    // Проверка валидности даты
+    if (isNaN(dateObj.getTime())) {
+      throw new Error("Invalid date format. Expected: 2025-11-14 08:58:34.484");
+    }
+
+    const months = [
+      "Января",
+      "Февраля",
+      "Марта",
+      "Апреля",
+      "Мая",
+      "Июня",
+      "Июля",
+      "Августа",
+      "Сентября",
+      "Октября",
+      "Ноября",
+      "Декабря",
+    ];
+
+    const month = months[dateObj.getMonth()];
+    const year = dateObj.getFullYear().toString(); // Последние 2 цифры года
+    const day = dateObj.getDate().toString().padStart(2, "0");
+
+    return `${day} ${month} ${year}`;
+  }
 
   if (!isOpen) return null;
 
@@ -82,7 +100,7 @@ export default function CertificateModal({
               </div>
             </div>
 
-            <div className="p-2 bg-gradient-to-r from-[rgb(0,91,137)] to-blue-600">
+            <div className="p-2 bg-linear-to-r from-[rgb(0,91,137)] to-blue-600">
               <div className="bg-white p-2">
                 <img
                   src={certificate.image}

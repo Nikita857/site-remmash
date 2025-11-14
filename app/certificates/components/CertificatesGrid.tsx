@@ -3,15 +3,7 @@
 import { motion } from "motion/react";
 import CertificateCard from "./CertificateCard";
 import Pagination from "./Pagination";
-
-interface Certificate {
-  id: number;
-  title: string;
-  description: string;
-  issueDate: string;
-  expiryDate: string;
-  image: string;
-}
+import { Certificate } from "@/types";
 
 interface CertificatesGridProps {
   certificates: Certificate[];

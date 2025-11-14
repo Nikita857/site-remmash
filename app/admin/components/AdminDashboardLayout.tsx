@@ -8,6 +8,7 @@ import { Sidebar, StatsOverview } from "./common";
 import ProductsPageContent from "./ProductsPageContent";
 import UsersPageContent from "./UsersPageContent";
 import ContactRequestsPageContent from "./ContactRequestsPageContent";
+import CertificatesPageContent from "./CertificatesPageContent";
 
 interface AdminDashboardLayoutProps {
   isAdmin: boolean;
@@ -86,7 +87,7 @@ export default function AdminDashboardLayout({
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {/* <CertificatesTable /> */}
+              <CertificatesPageContent />
             </motion.div>
           )}
 

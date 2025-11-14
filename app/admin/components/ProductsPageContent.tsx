@@ -1,8 +1,11 @@
 'use client';
 
-import { useProducts } from '@/hooks/useProducts';
+import { useState } from 'react';
+import { useAdminProducts } from '@/hooks/useAdminProducts';
 import { ProductsTable } from '../components/ProductsTable';
+import { EditProductModal } from '../components/products/EditProductModal';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { ProductWithCategory } from '@/types';
 
 export default function ProductsPageContent() {
   const {
@@ -13,7 +16,26 @@ export default function ProductsPageContent() {
     sortByName,
     sortByStatus,
     refreshProducts
-  } = useProducts();
+  } = useAdminProducts();
+
+  const [selectedProduct, setSelectedProduct] = useState<ProductWithCategory | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openEditModal = (product: ProductWithCategory | null) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleSaveProduct = async (productData: ProductWithCategory) => {
+    // В реальном приложении здесь будет API вызов для сохранения
+    closeEditModal();
+    refreshProducts(); // Перезагружаем данные после сохранения
+  };
 
   if (loading) {
     return (
@@ -47,7 +69,7 @@ export default function ProductsPageContent() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           <strong>Ошибка:</strong> {error}
         </div>
-        <button 
+        <button
           onClick={refreshProducts}
           className="px-4 py-2 bg-[rgb(0,91,137)] text-white rounded hover:bg-[rgb(0,71,117)] transition-colors"
         >
@@ -57,7 +79,22 @@ export default function ProductsPageContent() {
     );
   }
 
+  const handleCreateProduct = () => {
+    openEditModal(null);
+  };
+
   return (
-    <ProductsTable initialProducts={products} />
+    <div className="p-6">
+      <ProductsTable
+        initialProducts={products}
+        onCreateProduct={handleCreateProduct}
+      />
+      <EditProductModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={closeEditModal}
+        onSave={handleSaveProduct}
+      />
+    </div>
   );
 }
