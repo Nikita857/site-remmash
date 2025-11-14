@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { User as UserType } from '@/types';
+import { useState, useEffect } from "react";
+import { User as UserType } from "@/types";
 
 interface UseUsersReturn {
   users: UserType[];
@@ -20,7 +20,7 @@ export function useUsers(): UseUsersReturn {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/api/admin/users');
+      const response = await fetch("/api/admin/users");
 
       if (!response.ok) {
         throw new Error(`Ошибка получения данных: ${response.status}`);
@@ -29,13 +29,13 @@ export function useUsers(): UseUsersReturn {
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Не удалось получить данные');
+        throw new Error(result.error || "Не удалось получить данные");
       }
 
       setUsers(result.data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
-      console.error('Ошибка при получении пользователей:', err);
+      setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+      console.error("Ошибка при получении пользователей:", err);
     } finally {
       setLoading(false);
     }
@@ -55,6 +55,6 @@ export function useUsers(): UseUsersReturn {
     users,
     loading,
     error,
-    refreshUsers
+    refreshUsers,
   };
 }

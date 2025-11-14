@@ -4,10 +4,11 @@ import { Menu, X, ChevronDown, Mail, Phone, MapPin, User } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { SITE_CONFIG } from "../config";
+
 import { useRouter } from "next/navigation";
 import OrderModal from "@/components/OrderModal";
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut } from "next-auth/react";
+import { SITE_CONFIG } from "@/config";
 import { Button } from "./ui/button";
 
 export function Header() {
@@ -26,9 +27,9 @@ export function Header() {
   ];
 
   const handleLogout = async () => {
-    await signOut({ 
-      callbackUrl: '/rm-login', // Перенаправляем на страницу логина после выхода
-      redirect: true 
+    await signOut({
+      callbackUrl: "/rm-login", // Перенаправляем на страницу логина после выхода
+      redirect: true,
     });
   };
 
@@ -40,7 +41,9 @@ export function Header() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
             <div className="flex items-center gap-1 min-w-0">
               <MapPin className="w-4 h-4 flex-shrink-0" />
-              <span className="truncate">{SITE_CONFIG.contact.address.replace("Россия, ", "")}</span>
+              <span className="truncate">
+                {SITE_CONFIG.contact.address.replace("Россия, ", "")}
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
@@ -52,45 +55,45 @@ export function Header() {
             </div>
             {/* Кнопка панели администратора - показывается только при аутентификации */}
             <div className="flex items-center gap-2">
-                {status === 'authenticated' && (
-                  <motion.a
-                    href="/admin"
-                    className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md transition-colors relative group text-xs whitespace-nowrap"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.5 }}
-                    whileHover={{ y: -2 }}
-                  >
-                    Панель администратора
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.2 }}
-                    />
-                  </motion.a>
-                )}
-                
-                {status === 'authenticated' && (
-                  <motion.button
-                    onClick={handleLogout}
-                    className="flex items-center bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition-colors relative group text-xs whitespace-nowrap"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.6 }}
-                    whileHover={{ y: -2 }}
-                  >
-                    <User className="w-4 h-4 mr-1 flex-shrink-0" />
-                    Выйти
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                      initial={{ scaleX: 0 }}
-                      whileHover={{ scaleX: 1 }}
-                      transition={{ duration: 0.2 }}
-                    />
-                  </motion.button>
-                )}
-              </div>
+              {status === "authenticated" && (
+                <motion.a
+                  href="/admin"
+                  className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md transition-colors relative group text-xs whitespace-nowrap"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.5 }}
+                  whileHover={{ y: -2 }}
+                >
+                  Панель администратора
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.a>
+              )}
+
+              {status === "authenticated" && (
+                <motion.button
+                  onClick={handleLogout}
+                  className="flex items-center bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-md transition-colors relative group text-xs whitespace-nowrap"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.6 }}
+                  whileHover={{ y: -2 }}
+                >
+                  <User className="w-4 h-4 mr-1 flex-shrink-0" />
+                  Выйти
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </motion.button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -306,7 +309,7 @@ export function Header() {
               </div>
 
               {/* Кнопки для мобильной версии - только при аутентификации */}
-              {status === 'authenticated' && (
+              {status === "authenticated" && (
                 <motion.a
                   href="/admin"
                   className="text-black hover:bg-gray-50 hover:text-[rgb(0,91,137)] block px-3 py-2 rounded-md font-medium transition-colors"
@@ -319,7 +322,7 @@ export function Header() {
                 </motion.a>
               )}
 
-              {status === 'authenticated' && (
+              {status === "authenticated" && (
                 <motion.button
                   onClick={() => {
                     handleLogout();

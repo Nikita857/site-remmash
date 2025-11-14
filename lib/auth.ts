@@ -1,20 +1,21 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { verifyPassword } from './password-utils';
-import prisma from './prisma/client';
+import NextAuth, { JWT, NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { verifyPassword } from "./password-utils";
+import prisma from "./prisma/client";
+import { UserRole } from "@prisma/client";
 
-const nextAuthOptions = {
+const nextAuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
-            console.error('Отсутствуют необходимые учетные данные');
+            console.error("Отсутствуют необходимые учетные данные");
             return null;
           }
 
@@ -22,26 +23,32 @@ const nextAuthOptions = {
           const user = await prisma.user.findUnique({
             where: {
               email: credentials.email,
-              isActive: true
-            }
+              isActive: true,
+            },
           });
 
           if (!user) {
-            console.error('Пользователь с таким email не найден:', credentials.email);
+            console.error(
+              "Пользователь с таким email не найден:",
+              credentials.email
+            );
             return null;
           }
 
-          console.log('Найден пользователь:', user.email, user.role);
+          console.log("Найден пользователь:", user.email, user.role);
 
           // Проверка пароля
-          const isValidPassword = await verifyPassword(credentials.password, user.password);
+          const isValidPassword = await verifyPassword(
+            credentials.password,
+            user.password
+          );
 
           if (!isValidPassword) {
-            console.error('Неверный пароль для пользователя:', user.email);
+            console.error("Неверный пароль для пользователя:", user.email);
             return null;
           }
 
-          console.log('Успешная аутентификация для пользователя:', user.email);
+          console.log("Успешная аутентификация для пользователя:", user.email);
 
           // Возвращаем пользователя с его ролью
           return {
@@ -49,10 +56,10 @@ const nextAuthOptions = {
             name: `${user.name} ${user.surname}`, // Объединяем имя и фамилию
             email: user.email,
             role: user.role, // Сохраняем роль как есть (ADMIN/MODERATOR)
-            department: user.department
+            department: user.department,
           };
         } catch (error) {
-          console.error('Ошибка при аутентификации пользователя:', error);
+          console.error("Ошибка при аутентификации пользователя:", error);
           return null;
         }
       },
@@ -61,7 +68,7 @@ const nextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id; // стандартное поле для subject в JWT
+        token.sub = user.id;
         token.role = user.role;
         token.id = user.id;
         token.department = user.department;
@@ -71,21 +78,21 @@ const nextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.sub as string; // используем стандартное поле sub
-        session.user.role = token.role as string;
+        session.user.role = token.role as UserRole;
         session.user.department = token.department as string;
         // Добавляем токен в сессию для доступа на клиенте
-        session.accessToken = token.jti as string; // jti - JWT ID
+        session.accessToken = token.jti as JWT; // jti - JWT ID
       }
       return session;
     },
   },
   pages: {
-    signIn: '/rm-login', // Настраиваем наш маршрут
+    signIn: "/rm-login", // Настраиваем наш маршрут
   },
   session: {
-    strategy: 'jwt' as const,
+    strategy: "jwt" as const,
   },
-  secret: process.env.NEXTAUTH_SECRET || 'default_secret_for_dev', // В продакшене обязательно укажите в .env.local
+  secret: process.env.NEXTAUTH_SECRET || "default_secret_for_dev", // В продакшене обязательно укажите в .env.local
 };
 
 const handler = NextAuth(nextAuthOptions);

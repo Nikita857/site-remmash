@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'motion/react';
-import { X } from 'lucide-react';
+import { motion, AnimatePresence } from "motion/react";
+import { X } from "lucide-react";
 
 interface Certificate {
   id: number;
@@ -18,11 +18,19 @@ interface CertificateModalProps {
   certificate: Certificate;
 }
 
-export default function CertificateModal({ isOpen, onClose, certificate }: CertificateModalProps) {
+export default function CertificateModal({
+  isOpen,
+  onClose,
+  certificate,
+}: CertificateModalProps) {
   // Форматирование дат
   const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('ru-RU', options);
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return new Date(dateString).toLocaleDateString("ru-RU", options);
   };
 
   if (!isOpen) return null;
@@ -42,20 +50,26 @@ export default function CertificateModal({ isOpen, onClose, certificate }: Certi
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 border-b">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-800">{certificate.title}</h3>
-                  <p className="text-gray-600 mt-1">{certificate.description}</p>
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {certificate.title}
+                  </h3>
+                  <p className="text-gray-600 mt-1">
+                    {certificate.description}
+                  </p>
                   <div className="flex gap-6 mt-3 text-sm text-gray-500">
                     <div>
-                      <span className="font-medium">Выдан:</span> {formatDate(certificate.issueDate)}
+                      <span className="font-medium">Выдан:</span>{" "}
+                      {formatDate(certificate.issueDate)}
                     </div>
                     <div>
-                      <span className="font-medium">Действует до:</span> {formatDate(certificate.expiryDate)}
+                      <span className="font-medium">Действует до:</span>{" "}
+                      {formatDate(certificate.expiryDate)}
                     </div>
                   </div>
                 </div>
@@ -67,7 +81,7 @@ export default function CertificateModal({ isOpen, onClose, certificate }: Certi
                 </button>
               </div>
             </div>
-            
+
             <div className="p-2 bg-gradient-to-r from-[rgb(0,91,137)] to-blue-600">
               <div className="bg-white p-2">
                 <img

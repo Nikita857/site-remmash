@@ -1,41 +1,41 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'motion/react';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         email,
         password,
         redirect: false, // Не перенаправляем автоматически
       });
 
       if (result?.error) {
-        setError('Неверные учетные данные');
+        setError("Неверные учетные данные");
       } else {
         // Успешный вход - перенаправляем на главную или админ панель
-        router.push('/');
+        router.push("/");
         router.refresh(); // Обновляем, чтобы обновить состояние аутентификации
       }
     } catch (error) {
-      setError('Произошла ошибка при входе');
-      console.error('Login error:', error);
+      setError("Произошла ошибка при входе");
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
+      <main className="grow flex items-center justify-center bg-gray-50 py-12">
         <motion.div
           className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
@@ -53,7 +53,9 @@ export default function LoginPage() {
         >
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800">Вход в систему</h1>
-            <p className="text-gray-600 mt-2">Для доступа к административной панели</p>
+            <p className="text-gray-600 mt-2">
+              Для доступа к административной панели
+            </p>
           </div>
 
           {error && (
@@ -64,7 +66,10 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+              <label
+                htmlFor="email"
+                className="block text-gray-700 font-medium mb-2"
+              >
                 Email
               </label>
               <input
@@ -78,7 +83,10 @@ export default function LoginPage() {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+              <label
+                htmlFor="password"
+                className="block text-gray-700 font-medium mb-2"
+              >
                 Пароль
               </label>
               <input
@@ -95,12 +103,12 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg text-white font-medium ${
-                loading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)] transition-colors'
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)] transition-colors"
               }`}
             >
-              {loading ? 'Вход...' : 'Войти'}
+              {loading ? "Вход..." : "Войти"}
             </button>
           </form>
         </motion.div>

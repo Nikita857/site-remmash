@@ -1,3 +1,5 @@
+import { Award, CheckCircle, Factory, Wrench } from "lucide-react";
+
 export const SITE_CONFIG = {
   // Основная информация
   siteName: "ООО Реммаш",
@@ -60,35 +62,77 @@ export const SITE_CONFIG = {
 
   // Продукция
   products: [
-    { name: "Аппараты воздушного охлаждения", href: "/products/air-cooling-equipment" },
-    { name: "Теплообменное оборудование", href: "/products/heat-exchange-equipment" },
+    {
+      name: "Аппараты воздушного охлаждения",
+      href: "/products/air-cooling-equipment",
+    },
+    {
+      name: "Теплообменное оборудование",
+      href: "/products/heat-exchange-equipment",
+    },
     { name: "Емкостное оборудование", href: "/products/vessels" },
     { name: "Колонное оборудование", href: "/products/column" },
     { name: "Труба оребренная", href: "/products/finned-tube" },
   ],
+  validCategories: [
+    { category: "air-cooling-equipment" },
+    { category: "heat-exchange-equipment" },
+    { category: "vessels" },
+    { category: "column" },
+    { category: "finned-tube" },
+  ],
   projects: 200,
-
 
   headquarters: {
     director: {
       FIO: "Комаристый Александр Михайлович",
-      jobTitle: "Директор"
-    }
+      jobTitle: "Директор",
+    },
   },
 
   // Настройки пагинации
   pagination: {
-    defaultLimit: 10,     // Количество элементов на странице по умолчанию
-    maxLimit: 50,         // Максимальное количество элементов на странице
-    minLimit: 1,          // Минимальное количество элементов на странице
+    defaultLimit: 10, // Количество элементов на странице по умолчанию
+    maxLimit: 50, // Максимальное количество элементов на странице
+    minLimit: 1, // Минимальное количество элементов на странице
   },
 
   // Настройки ограничения отправки форм
   rateLimit: {
     WINDOW_MS: 24 * 60 * 60 * 1000, // 24 часа (в миллисекундах)
     MAX_REQUESTS: 3, // Максимум 3 отправки в течение окна
-    STORAGE_KEY: 'orderFormSubmissions', // Ключ для хранения данных в localStorage
-    TIME_MESSAGE: (hours: number) => `Следующая отправка формы возможна через ${hours} часов` // Шаблон сообщения
-  }
-
+    STORAGE_KEY: "orderFormSubmissions", // Ключ для хранения данных в localStorage
+    TIME_MESSAGE: (hours: number) =>
+      `Следующая отправка формы возможна через ${hours} часов`, // Шаблон сообщения
+  },
+  capabilities: [
+    {
+      icon: Factory,
+      title: "Современное производство",
+      description:
+        "Высокотехнологичное оборудование и автоматизированные линии производства обеспечивают высокое качество продукции.",
+      color: "from-blue-500 to-[rgb(0,91,137)]",
+    },
+    {
+      icon: Wrench,
+      title: "Полный цикл изготовления",
+      description:
+        "От проектирования до монтажа и пусконаладки — все этапы производства под контролем наших специалистов.",
+      color: "from-[rgb(0,91,137)] to-cyan-600",
+    },
+    {
+      icon: CheckCircle,
+      title: "Контроль качества",
+      description:
+        "Многоступенчатая система контроля качества на каждом этапе производства гарантирует соответствие всем стандартам.",
+      color: "from-cyan-600 to-blue-500",
+    },
+    {
+      icon: Award,
+      title: "Сертификация",
+      description:
+        "Вся продукция имеет необходимые сертификаты и разрешения для применения в нефтегазовой промышленности.",
+      color: "from-blue-500 to-indigo-600",
+    },
+  ],
 };

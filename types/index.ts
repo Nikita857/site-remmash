@@ -238,8 +238,18 @@ export interface ValidationError {
   value?: unknown;
 }
 
+export interface DisplayProduct {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  categorySlug: string;
+}
+
 // Export admin types
-export {
+export type{
   AdminProduct,
   PaginationState,
   SortConfig,

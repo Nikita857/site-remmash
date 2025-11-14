@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import CertificateCard from './CertificateCard';
-import Pagination from './Pagination';
+import { motion } from "motion/react";
+import CertificateCard from "./CertificateCard";
+import Pagination from "./Pagination";
 
 interface Certificate {
   id: number;
@@ -20,7 +20,12 @@ interface CertificatesGridProps {
   paginate: (pageNumber: number) => void;
 }
 
-export default function CertificatesGrid({ certificates, totalPages, currentPage, paginate }: CertificatesGridProps) {
+export default function CertificatesGrid({
+  certificates,
+  totalPages,
+  currentPage,
+  paginate,
+}: CertificatesGridProps) {
   return (
     <section className="py-20 bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -35,15 +40,16 @@ export default function CertificatesGrid({ certificates, totalPages, currentPage
             Сертификаты соответствия
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Наша продукция соответствует международным стандартам качества и безопасности
+            Наша продукция соответствует международным стандартам качества и
+            безопасности
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {certificates.map((certificate, index) => (
-            <CertificateCard 
-              key={certificate.id} 
-              certificate={certificate} 
+            <CertificateCard
+              key={certificate.id}
+              certificate={certificate}
               index={index}
             />
           ))}
@@ -51,10 +57,10 @@ export default function CertificatesGrid({ certificates, totalPages, currentPage
 
         {totalPages > 1 && (
           <div className="mt-16 flex justify-center">
-            <Pagination 
-              totalPages={totalPages} 
-              currentPage={currentPage} 
-              paginate={paginate} 
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              paginate={paginate}
             />
           </div>
         )}

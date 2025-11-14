@@ -1,20 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { SITE_CONFIG } from '@/config';
-import ProductsGrid from '../components/ProductsGrid';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  categorySlug: string;
-  price?: string;
-  slug?: string;
-}
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SITE_CONFIG } from "@/config";
+import ProductsGrid from "../components/ProductsGrid";
+import { DisplayProduct } from "@/types";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -46,7 +36,7 @@ interface ProductApiFormat {
 }
 
 interface ProductsGridSSRProps {
-  initialProducts: Product[];
+  initialProducts: DisplayProduct[];
   totalPages: number;
   currentPage: number;
   hasNextPage: boolean;
@@ -55,14 +45,15 @@ interface ProductsGridSSRProps {
 }
 
 // Вспомогательная функция для преобразования продукта API в формат компонента
-const mapApiProductToComponentProduct = (apiProduct: ProductApiFormat): Product => ({
+const mapApiProductToComponentProduct = (
+  apiProduct: ProductApiFormat
+): DisplayProduct => ({
   id: apiProduct.id,
   title: apiProduct.name,
   description: apiProduct.shortDescription,
-  image: apiProduct.images[0] || '/placeholder-product.jpg',
+  image: apiProduct.images[0] || "/placeholder-product.jpg",
   category: apiProduct.category.name,
   categorySlug: apiProduct.category.slug,
-  price: apiProduct.price ? `от ${apiProduct.price} ₽` : undefined,
   slug: apiProduct.slug,
 });
 
@@ -72,17 +63,17 @@ export default function ProductsGridSSR({
   currentPage,
   hasNextPage,
   hasPrevPage,
-  categorySlug
+  categorySlug,
 }: ProductsGridSSRProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [products, setProducts] = useState<DisplayProduct[]>(initialProducts);
   const [pagination, setPagination] = useState({
     totalPages,
     currentPage,
     hasNextPage,
-    hasPrevPage
+    hasPrevPage,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -93,34 +84,39 @@ export default function ProductsGridSSR({
     setError(null);
 
     try {
-      const response = await fetch(`/api/products/by-category/${categorySlug}?page=${page}&limit=${SITE_CONFIG.pagination.defaultLimit}`);
+      const response = await fetch(
+        `/api/products/by-category/${categorySlug}?page=${page}&limit=${SITE_CONFIG.pagination.defaultLimit}`
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Категория не найдена');
+          throw new Error("Категория не найдена");
         }
         throw new Error(`Ошибка загрузки данных: ${response.status}`);
       }
 
-      const result: ApiResponse<PaginatedResponse<ProductApiFormat>> = await response.json();
+      const result: ApiResponse<PaginatedResponse<ProductApiFormat>> =
+        await response.json();
 
       if (!result.success || !result.data) {
-        throw new Error(result.error || 'Не удалось получить данные');
+        throw new Error(result.error || "Не удалось получить данные");
       }
 
       // Обновляем состояние с новыми продуктами и информацией о пагинации
-      const mappedProducts = result.data.data.map(mapApiProductToComponentProduct);
+      const mappedProducts = result.data.data.map(
+        mapApiProductToComponentProduct
+      );
 
       setProducts(mappedProducts);
       setPagination({
         totalPages: result.data.totalPages,
         currentPage: result.data.currentPage,
         hasNextPage: result.data.hasNextPage,
-        hasPrevPage: result.data.hasPrevPage
+        hasPrevPage: result.data.hasPrevPage,
       });
     } catch (err) {
-      console.error('Error loading products:', err);
-      setError(err instanceof Error ? err.message : 'Ошибка загрузки данных');
+      console.error("Error loading products:", err);
+      setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
 
       // Возвращаем к начальному состоянию в случае ошибки
       setProducts(initialProducts);
@@ -128,7 +124,7 @@ export default function ProductsGridSSR({
         totalPages,
         currentPage,
         hasNextPage,
-        hasPrevPage
+        hasPrevPage,
       });
     } finally {
       setIsLoading(false);
@@ -138,11 +134,11 @@ export default function ProductsGridSSR({
   // Обработка изменения страницы
   const handlePageChange = (page: number) => {
     // Обновляем URL параметры
-    const params = new URLSearchParams(searchParams?.toString() || '');
+    const params = new URLSearchParams(searchParams?.toString() || "");
     if (page === 1) {
-      params.delete('page');
+      params.delete("page");
     } else {
-      params.set('page', page.toString());
+      params.set("page", page.toString());
     }
 
     // Обновляем URL
@@ -154,7 +150,10 @@ export default function ProductsGridSSR({
 
   // Эффект для отслеживания изменений URL и загрузки соответствующей страницы
   useEffect(() => {
-    const pageFromURL = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const pageFromURL = Math.max(
+      1,
+      parseInt(searchParams.get("page") || "1") || 1
+    );
 
     // Загружаем данные для страницы из URL, если она отличается от текущей
     if (pageFromURL !== pagination.currentPage) {
@@ -165,7 +164,10 @@ export default function ProductsGridSSR({
   // Эффект для обновления данных при смене категории
   useEffect(() => {
     // Загружаем данные для текущей страницы и новой категории
-    const pageFromURL = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const pageFromURL = Math.max(
+      1,
+      parseInt(searchParams.get("page") || "1") || 1
+    );
     loadProductsForPage(pageFromURL);
   }, [categorySlug]);
 

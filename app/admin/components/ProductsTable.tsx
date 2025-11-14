@@ -1,33 +1,45 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Fragment } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ProductWithCategory } from '@/types';
-import { EditProductModal, ProductTableRow, ProductExpandedRow } from './products';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/Input';
+import { useState, useEffect, Fragment } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { ProductWithCategory } from "@/types";
+import {
+  EditProductModal,
+  ProductTableRow,
+  ProductExpandedRow,
+} from "./products";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/Input";
 
 interface ProductsTableProps {
   initialProducts: ProductWithCategory[];
 }
 
 export function ProductsTable({ initialProducts }: ProductsTableProps) {
-  const [products, setProducts] = useState<ProductWithCategory[]>(initialProducts);
-  const [filteredProducts, setFilteredProducts] = useState<ProductWithCategory[]>(initialProducts);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [products, setProducts] =
+    useState<ProductWithCategory[]>(initialProducts);
+  const [filteredProducts, setFilteredProducts] =
+    useState<ProductWithCategory[]>(initialProducts);
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [selectedProduct, setSelectedProduct] = useState<ProductWithCategory | null>(null);
+  const [selectedProduct, setSelectedProduct] =
+    useState<ProductWithCategory | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(false);
 
   // Фильтрация продуктов по поисковому запросу
   useEffect(() => {
-    const filtered = products.filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.shortDescription?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (product.category?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.shortDescription
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (product.category?.name || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
     );
 
     setFilteredProducts(filtered);
@@ -38,7 +50,7 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
   const toggleProductStatus = async (productId: string) => {
     setLoading(true);
     try {
-      const productIndex = products.findIndex(p => p.id === productId);
+      const productIndex = products.findIndex((p) => p.id === productId);
       if (productIndex === -1) return;
 
       // Обновляем статус в состоянии
@@ -47,7 +59,7 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
       if (currentProduct) {
         updatedProducts[productIndex] = {
           ...currentProduct,
-          isActive: !currentProduct.isActive
+          isActive: !currentProduct.isActive,
         };
       }
 
@@ -55,13 +67,15 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
 
       // Обновляем также фильтрованный список
       const updatedFilteredProducts = [...filteredProducts];
-      const filteredIndex = updatedFilteredProducts.findIndex(p => p.id === productId);
+      const filteredIndex = updatedFilteredProducts.findIndex(
+        (p) => p.id === productId
+      );
       if (filteredIndex !== -1) {
         const filteredProduct = updatedFilteredProducts[filteredIndex];
         if (filteredProduct) {
           updatedFilteredProducts[filteredIndex] = {
             ...filteredProduct,
-            isActive: !filteredProduct.isActive
+            isActive: !filteredProduct.isActive,
           };
           setFilteredProducts(updatedFilteredProducts);
         }
@@ -69,13 +83,13 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
 
       // В реальном приложении здесь будет API вызов для обновления статуса в базе данных
       const response = await fetch(`/api/products/${productId}/toggle-status`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          isActive: currentProduct?.isActive
-        })
+          isActive: currentProduct?.isActive,
+        }),
       });
 
       if (!response.ok) {
@@ -83,7 +97,7 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
         throw new Error(`Ошибка обновления статуса: ${response.status}`);
       }
     } catch (error) {
-      console.error('Ошибка при переключении статуса продукта:', error);
+      console.error("Ошибка при переключении статуса продукта:", error);
 
       // Откатываем изменения в случае ошибки
       const revertedProducts = [...products];
@@ -113,11 +127,11 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
     try {
       // В реальном приложении здесь будет API вызов для сохранения изменений
       const response = await fetch(`/api/products/${updatedProduct.id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedProduct)
+        body: JSON.stringify(updatedProduct),
       });
 
       if (!response.ok) {
@@ -125,14 +139,14 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
       }
 
       // Обновляем продукт в состоянии
-      const updatedProducts = products.map(product =>
+      const updatedProducts = products.map((product) =>
         product.id === updatedProduct.id ? updatedProduct : product
       );
 
       setProducts(updatedProducts);
 
       // Обновляем также фильтрованный список
-      const updatedFilteredProducts = filteredProducts.map(product =>
+      const updatedFilteredProducts = filteredProducts.map((product) =>
         product.id === updatedProduct.id ? updatedProduct : product
       );
 
@@ -140,22 +154,25 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
 
       closeEditModal();
     } catch (error) {
-      console.error('Ошибка при сохранении продукта:', error);
+      console.error("Ошибка при сохранении продукта:", error);
     }
   };
 
   // Переключение расширенной строки
   const toggleRowExpansion = (productId: string) => {
-    setExpandedRows(prev => ({
+    setExpandedRows((prev) => ({
       ...prev,
-      [productId]: !prev[productId]
+      [productId]: !prev[productId],
     }));
   };
 
   // Пагинация
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  const currentProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   // Функция для изменения страницы
   const handlePageChange = (page: number) => {
@@ -167,20 +184,22 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
       {/* Заголовок таблицы с элементами управления */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h2 className="text-xl font-bold text-gray-800">Управление продукцией</h2>
+          <h2 className="text-xl font-bold text-gray-800">
+            Управление продукцией
+          </h2>
           <div className="relative">
-            <svg 
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
             <Input
@@ -226,9 +245,9 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
                   onToggleRowExpansion={toggleRowExpansion}
                   isExpanded={!!expandedRows[product.id]}
                 />
-                <ProductExpandedRow 
-                  product={product} 
-                  isExpanded={!!expandedRows[product.id]} 
+                <ProductExpandedRow
+                  product={product}
+                  isExpanded={!!expandedRows[product.id]}
                 />
               </Fragment>
             ))}
@@ -240,11 +259,12 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
       {totalPages > 1 && (
         <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
           <div className="text-sm text-gray-700">
-            Показано <span className="font-medium">{startIndex + 1}</span> -{' '}
+            Показано <span className="font-medium">{startIndex + 1}</span> -{" "}
             <span className="font-medium">
               {Math.min(startIndex + itemsPerPage, filteredProducts.length)}
-            </span>{' '}
-            из <span className="font-medium">{filteredProducts.length}</span> продуктов
+            </span>{" "}
+            из <span className="font-medium">{filteredProducts.length}</span>{" "}
+            продуктов
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -254,8 +274,18 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
               disabled={currentPage === 1}
               className="flex items-center"
             >
-              <svg className="w-4 h-4 mr-1 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-4 h-4 mr-1 transform rotate-90"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
               Назад
             </Button>
@@ -283,7 +313,11 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
                   variant={currentPage === pageNum ? "default" : "outline"}
                   size="sm"
                   onClick={() => handlePageChange(pageNum)}
-                  className={currentPage === pageNum ? "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)]" : ""}
+                  className={
+                    currentPage === pageNum
+                      ? "bg-[rgb(0,91,137)] hover:bg-[rgb(0,71,117)]"
+                      : ""
+                  }
                 >
                   {pageNum}
                 </Button>
@@ -298,8 +332,18 @@ export function ProductsTable({ initialProducts }: ProductsTableProps) {
               className="flex items-center"
             >
               Вперед
-              <svg className="w-4 h-4 ml-1 transform -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-4 h-4 ml-1 transform -rotate-90"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Button>
           </div>

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import { ArrowRight } from 'lucide-react';
-import { ImageWithFallback } from '../../../components/figma/ImageWithFallback';
-import type { ProductWithCategory } from '@/types';
-import { truncateText } from '@/lib/utils';
+import { motion } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import { truncateText } from "@/lib/utils";
+import { DisplayProduct } from "@/types";
+import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 
 interface ProductCardProps {
-  product: ProductWithCategory;
+  product: DisplayProduct;
   index: number;
 }
 
 export default function ProductCard({ product, index }: ProductCardProps) {
   // Generate proper URL for the product page
-  const productUrl = `/products/${product.category.slug}/${product.slug}`;
-  
+  const productUrl = `/products/${product.categorySlug}/${product.slug}`;
+
   return (
     <motion.div
       className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row"
@@ -22,13 +22,17 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -5, boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
-      aria-label={`Product: ${product.name}`}
+      whileHover={{
+        y: -5,
+        boxShadow:
+          "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      }}
+      aria-label={`Product: ${product.title}`}
     >
       <div className="md:w-1/3">
         <ImageWithFallback
-          src={product.images[0] || '/placeholder-product.jpg'}
-          alt={product.name || 'Product image'}
+          src={product.image}
+          alt={product.title}
           className="w-full h-64 md:h-full object-cover"
           width={400}
           height={300}
@@ -38,10 +42,14 @@ export default function ProductCard({ product, index }: ProductCardProps) {
       <div className="p-8 flex-1 flex flex-col justify-center">
         <div className="mb-4">
           <span className="inline-block px-3 py-1 text-xs font-semibold bg-[rgb(0,91,137)]/10 text-[rgb(0,91,137)] rounded-full mb-3">
-            {product.category.name}
+            {product.category}
           </span>
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">{product.name}</h3>
-          <p className="text-gray-600 mb-4">{truncateText(product.shortDescription, 150)}</p>
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">
+            {product.title}
+          </h3>
+          <p className="text-gray-600 mb-4">
+            {truncateText(product.description, 150)}
+          </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">

@@ -1,10 +1,10 @@
-import { SITE_CONFIG } from '../config';
-import { Header } from "../components/Header";
-import { HeroSection } from "../components/HeroSection";
-import { ProductionCapabilities } from "../components/ProductionCapabilities";
-import { CooperationSection } from "../components/CooperationSection";
-import { QuestionnaireSection } from "../components/QuestionnaireSection";
-import { Footer } from "../components/Footer";
+import { CooperationSection } from "@/components/CooperationSection";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { HeroSection } from "@/components/HeroSection";
+import { ProductionCapabilities } from "@/components/ProductionCapabilities";
+import { QuestionnaireSection } from "@/components/QuestionnaireSection";
+import { SITE_CONFIG } from "@/config";
 
 export const metadata = {
   title: SITE_CONFIG.meta.title,

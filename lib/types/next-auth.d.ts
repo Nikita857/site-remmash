@@ -16,7 +16,9 @@ declare module 'next-auth' {
       role: UserRole;
       /** Отдел пользователя */
       department: string;
+
     } & DefaultSession['user'];
+    accessToken: JWT;
   }
 
   /**

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { SessionProvider, useSession, signOut } from 'next-auth/react';
-import { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { motion } from 'motion/react';
+import { SessionProvider, useSession } from "next-auth/react";
+import { ReactNode, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -15,20 +15,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  roles?: ('admin' | 'moderator')[];
+  roles?: ("admin" | "moderator")[];
 }
 
-export function ProtectedRoute({ children, roles = ['admin', 'moderator'] }: ProtectedRouteProps) {
+export function ProtectedRoute({
+  children,
+  roles = ["admin", "moderator"],
+}: ProtectedRouteProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/rm-login');
+    if (status === "unauthenticated") {
+      router.push("/rm-login");
     }
   }, [status, router]);
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <motion.div
@@ -41,9 +44,9 @@ export function ProtectedRoute({ children, roles = ['admin', 'moderator'] }: Pro
   }
 
   const userRole = session?.user?.role;
-  const hasAccess = roles.some(role => role.toUpperCase() === userRole);
+  const hasAccess = roles.some((role) => role.toUpperCase() === userRole);
 
-  if (status === 'unauthenticated' || !hasAccess) {
+  if (status === "unauthenticated" || !hasAccess) {
     return null; // Компонент перенаправит в useEffect
   }
 
@@ -54,11 +57,11 @@ export function ProtectedRoute({ children, roles = ['admin', 'moderator'] }: Pro
 export function UserInfo() {
   const { data: session, status } = useSession();
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return <div>Загрузка...</div>;
   }
 
-  if (status === 'unauthenticated') {
+  if (status === "unauthenticated") {
     return <div>Не аутентифицирован</div>;
   }
 
@@ -73,18 +76,20 @@ export function UserInfo() {
 // Компонент для проверки аутентификации
 export function useAuth() {
   const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
-  const isAdmin = isAuthenticated && session?.user?.role === 'ADMIN';
-  const isModerator = isAuthenticated && session?.user?.role === 'MODERATOR';
-  const isAdminOrModerator = isAuthenticated && (session?.user?.role === 'ADMIN' || session?.user?.role === 'MODERATOR');
+  const isAuthenticated = status === "authenticated";
+  const isAdmin = isAuthenticated && session?.user?.role === "ADMIN";
+  const isModerator = isAuthenticated && session?.user?.role === "MODERATOR";
+  const isAdminOrModerator =
+    isAuthenticated &&
+    (session?.user?.role === "ADMIN" || session?.user?.role === "MODERATOR");
 
-  return { 
-    session, 
-    status, 
-    isAuthenticated, 
+  return {
+    session,
+    status,
+    isAuthenticated,
     isAdmin,
     isModerator,
     isAdminOrModerator,
-    loading: status === 'loading'
+    loading: status === "loading",
   };
 }

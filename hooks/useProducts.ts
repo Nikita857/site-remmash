@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { ProductWithCategory } from '@/types';
+import { useState, useEffect } from "react";
+import { ProductWithCategory } from "@/types";
 
 interface UseProductsReturn {
   products: ProductWithCategory[];
@@ -22,23 +22,23 @@ export function useProducts(): UseProductsReturn {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await fetch('/api/products/all');
-      
+
+      const response = await fetch("/api/products/all");
+
       if (!response.ok) {
         throw new Error(`Ошибка получения данных: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (!result.success) {
-        throw new Error(result.error || 'Не удалось получить данные');
+        throw new Error(result.error || "Не удалось получить данные");
       }
-      
+
       setProducts(result.data?.data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
-      console.error('Ошибка при получении продукции:', err);
+      setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+      console.error("Ошибка при получении продукции:", err);
     } finally {
       setLoading(false);
     }
@@ -51,11 +51,15 @@ export function useProducts(): UseProductsReturn {
 
   // Функция для сортировки по категории
   const sortByCategory = (category: string) => {
-    setProducts(prev => {
+    setProducts((prev) => {
       return [...prev].sort((a, b) => {
-        const aMatches = a.category.name.toLowerCase().includes(category.toLowerCase());
-        const bMatches = b.category.name.toLowerCase().includes(category.toLowerCase());
-        
+        const aMatches = a.category.name
+          .toLowerCase()
+          .includes(category.toLowerCase());
+        const bMatches = b.category.name
+          .toLowerCase()
+          .includes(category.toLowerCase());
+
         if (aMatches && !bMatches) return -1;
         if (!aMatches && bMatches) return 1;
         return 0;
@@ -65,7 +69,7 @@ export function useProducts(): UseProductsReturn {
 
   // Функция для сортировки по названию
   const sortByName = () => {
-    setProducts(prev => {
+    setProducts((prev) => {
       return [...prev].sort((a, b) => {
         return a.name.localeCompare(b.name);
       });
@@ -74,7 +78,7 @@ export function useProducts(): UseProductsReturn {
 
   // Функция для сортировки по статусу
   const sortByStatus = () => {
-    setProducts(prev => {
+    setProducts((prev) => {
       return [...prev].sort((a, b) => {
         if (a.isActive && !b.isActive) return -1;
         if (!a.isActive && b.isActive) return 1;
@@ -95,6 +99,6 @@ export function useProducts(): UseProductsReturn {
     sortByCategory,
     sortByName,
     sortByStatus,
-    refreshProducts
+    refreshProducts,
   };
 }

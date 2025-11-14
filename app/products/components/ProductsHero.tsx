@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
+import { motion } from "motion/react";
 
 interface ProductsHeroProps {
   category: string;
@@ -8,10 +8,11 @@ interface ProductsHeroProps {
 
 export default function ProductsHero({ category }: ProductsHeroProps) {
   return (
-    <section className="relative bg-gradient-to-br from-black via-gray-900 to-[rgb(0,91,137)] text-white overflow-hidden">
+    <section className="relative bg-linear-to-br from-black via-gray-900 to-[rgb(0,91,137)] text-white overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0 opacity-20">
-        <div className="w-full h-full bg-gray-800" /> {/* Placeholder for image */}
+        <div className="w-full h-full bg-gray-800" />{" "}
+        {/* Placeholder for image */}
       </div>
 
       {/* Decorative elements */}

@@ -14,19 +14,6 @@ export default function ProductHero({ product }: ProductHeroProps) {
   const title = product?.name || "Кожухотрубный теплообменник";
   const description = product?.shortDescription || "Высококачественное теплообменное оборудование, соответствующее международным стандартам. Оптимальное решение для вашей производственной задачи.";
 
-  // Обработка данных продукта безопасным образом
-  const stats = product ? {
-    warranty: product.warranty || "15 лет",
-    projects: product.projects || "200+",
-    satisfaction: product.satisfaction || "98%",
-    quality: product.quality || "100%"
-  } : {
-    warranty: "15 лет",
-    projects: "200+",
-    satisfaction: "98%",
-    quality: "100%"
-  };
-
   return (
     <section className="relative bg-linear-to-br from-black via-gray-900 to-[rgb(0,91,137)] text-white overflow-hidden">
       {/* Background image */}

@@ -1,6 +1,5 @@
 "use client";
 
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import {
   Users,
   Headphones,
@@ -9,6 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export function CooperationSection() {
   const benefits = [

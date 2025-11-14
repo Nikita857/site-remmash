@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -15,14 +15,17 @@ export async function PATCH(
 
     // Проверяем сессию пользователя
     const session = await getServerSession(authOptions);
-    
+
     // Только администраторы и модераторы могут изменять статус продукта
-    if (!session || (session.user?.role !== 'ADMIN' && session.user?.role !== 'MODERATOR')) {
+    if (
+      !session ||
+      (session.user?.role !== "ADMIN" && session.user?.role !== "MODERATOR")
+    ) {
       return Response.json(
-        { 
-          success: false, 
-          error: 'Доступ запрещен',
-          message: 'Недостаточно прав для изменения статуса продукта'
+        {
+          success: false,
+          error: "Доступ запрещен",
+          message: "Недостаточно прав для изменения статуса продукта",
         },
         { status: 403 }
       );
@@ -32,12 +35,12 @@ export async function PATCH(
     const { isActive } = await request.json();
 
     // Проверяем, что isActive - boolean
-    if (typeof isActive !== 'boolean') {
+    if (typeof isActive !== "boolean") {
       return Response.json(
-        { 
-          success: false, 
-          error: 'Invalid data',
-          message: 'Параметр isActive должен быть булевым значением'
+        {
+          success: false,
+          error: "Invalid data",
+          message: "Параметр isActive должен быть булевым значением",
         },
         { status: 400 }
       );
@@ -54,36 +57,36 @@ export async function PATCH(
       },
       include: {
         category: true, // Включаем категорию для полного возвращаемого объекта
-      }
+      },
     });
 
     // Возвращаем обновленный продукт
     return Response.json({
       success: true,
       data: updatedProduct,
-      message: 'Статус продукта успешно обновлен'
+      message: "Статус продукта успешно обновлен",
     });
   } catch (error) {
-    console.error('Ошибка при обновлении статуса продукта:', error);
-    
+    console.error("Ошибка при обновлении статуса продукта:", error);
+
     // Если продукт не найден
-    if (error instanceof Error && error.message.includes('RecordNotFound')) {
+    if (error instanceof Error && error.message.includes("RecordNotFound")) {
       return Response.json(
-        { 
-          success: false, 
-          error: 'Product not found',
-          message: 'Продукт с указанным ID не найден'
+        {
+          success: false,
+          error: "Product not found",
+          message: "Продукт с указанным ID не найден",
         },
         { status: 404 }
       );
     }
-    
+
     // Другие ошибки
     return Response.json(
-      { 
-        success: false, 
-        error: 'Internal server error',
-        message: 'Ошибка на сервере при обновлении статуса продукта'
+      {
+        success: false,
+        error: "Internal server error",
+        message: "Ошибка на сервере при обновлении статуса продукта",
       },
       { status: 500 }
     );

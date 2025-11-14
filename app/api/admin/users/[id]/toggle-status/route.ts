@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/prisma/client';
+import { NextRequest } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma/client";
 
 export async function PATCH(
   request: NextRequest,
@@ -10,12 +10,9 @@ export async function PATCH(
   try {
     // Проверяем сессию пользователя
     const session = await getServerSession(authOptions);
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return Response.json(
-        { error: 'Доступ запрещен' },
-        { status: 403 }
-      );
+
+    if (!session || session.user?.role !== "ADMIN") {
+      return Response.json({ error: "Доступ запрещен" }, { status: 403 });
     }
 
     const { id } = await params;
@@ -28,7 +25,7 @@ export async function PATCH(
 
     if (!existingUser) {
       return Response.json(
-        { error: 'Пользователь не найден' },
+        { error: "Пользователь не найден" },
         { status: 404 }
       );
     }
@@ -36,7 +33,7 @@ export async function PATCH(
     // Проверяем, не является ли пользователь текущим администратором
     if (session.user?.id === id && !isActive) {
       return Response.json(
-        { error: 'Нельзя деактивировать собственную учетную запись' },
+        { error: "Нельзя деактивировать собственную учетную запись" },
         { status: 400 }
       );
     }
@@ -64,15 +61,15 @@ export async function PATCH(
     return Response.json({
       success: true,
       data: updatedUser,
-      message: `Пользователь ${isActive ? 'активирован' : 'деактивирован'}`,
+      message: `Пользователь ${isActive ? "активирован" : "деактивирован"}`,
     });
   } catch (error) {
-    console.error('Ошибка обновления статуса пользователя:', error);
-    
+    console.error("Ошибка обновления статуса пользователя:", error);
+
     return Response.json(
-      { 
-        success: false, 
-        error: 'Ошибка сервера при обновлении статуса пользователя' 
+      {
+        success: false,
+        error: "Ошибка сервера при обновлении статуса пользователя",
       },
       { status: 500 }
     );

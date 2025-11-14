@@ -1,4 +1,5 @@
-import { auth } from '@/lib/auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 
 // Типы для сессии
 export type UserRole = 'ADMIN' | 'MODERATOR' | 'user';
@@ -20,7 +21,7 @@ export interface Session {
  */
 export async function isAuthenticated(): Promise<boolean> {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     return !!session?.user;
   } catch {
     return false;
@@ -32,8 +33,8 @@ export async function isAuthenticated(): Promise<boolean> {
  */
 export async function getCurrentUser(): Promise<SessionUser | null> {
   try {
-    const session = await auth();
-    return session?.user || null;
+    const session = await getServerSession(authOptions);
+    return (session?.user as SessionUser) || null;
   } catch {
     return null;
   }
@@ -44,7 +45,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
  */
 export async function isAdmin(): Promise<boolean> {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
     return session?.user?.role === 'ADMIN';
   } catch {
     return false;

@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Fragment, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { User as UserType } from '@/types';
-import { UserTableHeader, UserTableRow, UserTablePagination, EditUserModal } from './users';
+import { useState, useEffect, Fragment, useCallback } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { User as UserType } from "@/types";
+import {
+  UserTableHeader,
+  UserTableRow,
+  UserTablePagination,
+  EditUserModal,
+} from "./users";
 
 interface UsersTableProps {
   initialUsers: UserType[];
@@ -13,16 +18,16 @@ interface UsersTableProps {
   onDelete: (userId: string) => void;
 }
 
-export function UsersTable({ 
-  initialUsers, 
-  onEditUser, 
-  onCreateUser, 
+export function UsersTable({
+  initialUsers,
+  onEditUser,
+  onCreateUser,
   onToggleStatus,
-  onDelete
+  onDelete,
 }: UsersTableProps) {
   const [users] = useState<UserType[]>(initialUsers);
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(initialUsers);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
@@ -31,11 +36,12 @@ export function UsersTable({
 
   // Фильтрация пользователей по поисковому запросу
   useEffect(() => {
-    const filtered = users.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.department.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.department.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     setFilteredUsers(filtered);
@@ -56,16 +62,19 @@ export function UsersTable({
 
   // Переключение расширенной строки
   const toggleRowExpansion = useCallback((userId: string) => {
-    setExpandedRows(prev => ({
+    setExpandedRows((prev) => ({
       ...prev,
-      [userId]: !prev[userId]
+      [userId]: !prev[userId],
     }));
   }, []);
 
   // Пагинация
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+  const currentUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   // Функция для изменения страницы
   const handlePageChange = useCallback((page: number) => {
@@ -79,10 +88,10 @@ export function UsersTable({
   return (
     <>
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <UserTableHeader 
-          searchTerm={searchTerm} 
-          onSearchChange={handleSearchChange} 
-          onCreateUser={onCreateUser} 
+        <UserTableHeader
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          onCreateUser={onCreateUser}
         />
 
         {/* Таблица */}
@@ -126,24 +135,42 @@ export function UsersTable({
                       <td colSpan={6} className="px-6 py-4 bg-gray-50">
                         <div className="space-y-4">
                           <div>
-                            <h4 className="font-medium text-gray-900 mb-3 text-lg">Контактная информация</h4>
+                            <h4 className="font-medium text-gray-900 mb-3 text-lg">
+                              Контактная информация
+                            </h4>
                             <dl className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
-                                <dt className="text-sm font-medium text-gray-500">Телефон</dt>
-                                <dd className="mt-1 text-sm text-gray-900 font-medium">{user.phone}</dd>
-                              </div>
-                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
-                                <dt className="text-sm font-medium text-gray-500">Email</dt>
-                                <dd className="mt-1 text-sm text-gray-900 font-medium">{user.email}</dd>
-                              </div>
-                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
-                                <dt className="text-sm font-medium text-gray-500">Отдел</dt>
-                                <dd className="mt-1 text-sm text-gray-900 font-medium">{user.department}</dd>
-                              </div>
-                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
-                                <dt className="text-sm font-medium text-gray-500">Дата создания</dt>
+                                <dt className="text-sm font-medium text-gray-500">
+                                  Телефон
+                                </dt>
                                 <dd className="mt-1 text-sm text-gray-900 font-medium">
-                                  {new Date(user.createdAt).toLocaleDateString('ru-RU')}
+                                  {user.phone}
+                                </dd>
+                              </div>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                                <dt className="text-sm font-medium text-gray-500">
+                                  Email
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 font-medium">
+                                  {user.email}
+                                </dd>
+                              </div>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                                <dt className="text-sm font-medium text-gray-500">
+                                  Отдел
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 font-medium">
+                                  {user.department}
+                                </dd>
+                              </div>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+                                <dt className="text-sm font-medium text-gray-500">
+                                  Дата создания
+                                </dt>
+                                <dd className="mt-1 text-sm text-gray-900 font-medium">
+                                  {new Date(user.createdAt).toLocaleDateString(
+                                    "ru-RU"
+                                  )}
                                 </dd>
                               </div>
                             </dl>

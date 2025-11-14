@@ -5,40 +5,12 @@ import { Factory, Wrench, CheckCircle, Award, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { Card, CardContent } from "./ui/card";
+import { SITE_CONFIG } from "@/config";
 
 export function ProductionCapabilities() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
-  const capabilities = [
-    {
-      icon: Factory,
-      title: "Современное производство",
-      description:
-        "Высокотехнологичное оборудование и автоматизированные линии производства обеспечивают высокое качество продукции.",
-      color: "from-blue-500 to-[rgb(0,91,137)]",
-    },
-    {
-      icon: Wrench,
-      title: "Полный цикл изготовления",
-      description:
-        "От проектирования до монтажа и пусконаладки — все этапы производства под контролем наших специалистов.",
-      color: "from-[rgb(0,91,137)] to-cyan-600",
-    },
-    {
-      icon: CheckCircle,
-      title: "Контроль качества",
-      description:
-        "Многоступенчатая система контроля качества на каждом этапе производства гарантирует соответствие всем стандартам.",
-      color: "from-cyan-600 to-blue-500",
-    },
-    {
-      icon: Award,
-      title: "Сертификация",
-      description:
-        "Вся продукция имеет необходимые сертификаты и разрешения для применения в нефтегазовой промышленности.",
-      color: "from-blue-500 to-indigo-600",
-    },
-  ];
+  const capabilities = SITE_CONFIG.capabilities;
 
   return (
     <section

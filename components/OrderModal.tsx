@@ -24,15 +24,16 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
     handleConsentChange,
     validateForm,
     submitOrder,
-    resetForm
+    resetForm,
   } = useOrderForm();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!isRateLimited && validateForm(true)) { // Проверка ограничения и валидация с согласием
+
+    if (!isRateLimited && validateForm(true)) {
+      // Проверка ограничения и валидация с согласием
       const result = await submitOrder({}, true); // Отправка с согласием
-      
+
       if (result.success) {
         // Успешная отправка - через 3 секунды сбросим форму и закроем модальное окно
         setTimeout(() => {
@@ -119,14 +120,20 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                           id="fullName"
                           name="fullName"
                           value={formData.fullName}
-                          onChange={(e) => handleChange('fullName', e.target.value)}
+                          onChange={(e) =>
+                            handleChange("fullName", e.target.value)
+                          }
                           className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent ${
-                            errors.fullName ? 'border-red-500' : 'border-gray-300'
+                            errors.fullName
+                              ? "border-red-500"
+                              : "border-gray-300"
                           }`}
                           placeholder="Иванов Иван Иванович"
                         />
                         {errors.fullName && (
-                          <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.fullName}
+                          </p>
                         )}
                       </div>
 
@@ -142,14 +149,18 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                           id="phone"
                           name="phone"
                           value={formData.phone}
-                          onChange={(e) => handleChange('phone', e.target.value)}
+                          onChange={(e) =>
+                            handleChange("phone", e.target.value)
+                          }
                           className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent ${
-                            errors.phone ? 'border-red-500' : 'border-gray-300'
+                            errors.phone ? "border-red-500" : "border-gray-300"
                           }`}
                           placeholder="+7 (___) ___-__-__"
                         />
                         {errors.phone && (
-                          <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.phone}
+                          </p>
                         )}
                       </div>
 
@@ -164,8 +175,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                           type="email"
                           id="email"
                           name="email"
-                          value={formData.email || ''}
-                          onChange={(e) => handleChange('email', e.target.value)}
+                          value={formData.email || ""}
+                          onChange={(e) =>
+                            handleChange("email", e.target.value)
+                          }
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent"
                           placeholder="example@domain.com"
                         />
@@ -181,8 +194,10 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                         <textarea
                           id="comment"
                           name="comment"
-                          value={formData.comment || ''}
-                          onChange={(e) => handleChange('comment', e.target.value)}
+                          value={formData.comment || ""}
+                          onChange={(e) =>
+                            handleChange("comment", e.target.value)
+                          }
                           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[rgb(0,91,137)] focus:border-transparent"
                           placeholder="Ваш комментарий"
                           rows={3}
@@ -195,9 +210,11 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                         <input
                           type="checkbox"
                           checked={consent}
-                          onChange={(e) => handleConsentChange(e.target.checked)}
+                          onChange={(e) =>
+                            handleConsentChange(e.target.checked)
+                          }
                           className={`mt-1 mr-2 rounded text-[rgb(0,91,137)] focus:ring-[rgb(0,91,137)] ${
-                            errors.consent ? 'border-red-500' : ''
+                            errors.consent ? "border-red-500" : ""
                           }`}
                         />
                         <span className="text-gray-600 text-sm">
@@ -209,7 +226,9 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                             политикой обработки персональных данных
                           </a>
                           {errors.consent && (
-                            <p className="mt-1 text-sm text-red-600">{errors.consent}</p>
+                            <p className="mt-1 text-sm text-red-600">
+                              {errors.consent}
+                            </p>
                           )}
                         </span>
                       </label>
@@ -241,10 +260,12 @@ export default function OrderModal({ isOpen, onClose }: OrderModalProps) {
                         )}
                       </button>
                     </div>
-                    
+
                     {isRateLimited && timeUntilReset && (
                       <div className="mt-4 text-center text-sm text-gray-600">
-                        {SITE_CONFIG.rateLimit.TIME_MESSAGE(Math.ceil(timeUntilReset / (1000 * 60 * 60)))}
+                        {SITE_CONFIG.rateLimit.TIME_MESSAGE(
+                          Math.ceil(timeUntilReset / (1000 * 60 * 60))
+                        )}
                       </div>
                     )}
                   </form>

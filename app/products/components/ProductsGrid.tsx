@@ -1,23 +1,12 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { ArrowRight, Eye, Download, Heart } from 'lucide-react';
-import { ImageWithFallback } from '../../../components/figma/ImageWithFallback';
 import ProductCard from './ProductCard';
 import Pagination from './Pagination';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  categorySlug: string;
-  price?: string;
-}
+import { DisplayProduct } from '@/types';
 
 interface ProductsGridProps {
-  products: Product[];
+  products: DisplayProduct[];
   totalPages: number;
   currentPage: number;
   paginate: (pageNumber: number) => void;

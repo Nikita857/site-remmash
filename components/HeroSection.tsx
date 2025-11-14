@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { ArrowRight, Shield, Users, TrendingUp } from "lucide-react";
 import { SITE_CONFIG } from "@/config";
 import { Button } from "./ui/button";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
 
 export function HeroSection() {
@@ -105,7 +104,7 @@ export function HeroSection() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  onClick={() => router.push('/products')}
+                  onClick={() => router.push("/products")}
                   size="lg"
                   variant="outline"
                   className="bg-white/10 border-white text-white hover:bg-white hover:text-black backdrop-blur-sm w-full sm:w-auto px-8 py-6 text-lg"
@@ -126,14 +125,18 @@ export function HeroSection() {
                 <div className="w-12 h-12 bg-[rgb(0,91,137)]/30 rounded-full flex items-center justify-center mb-3">
                   <Users className="w-6 h-6 text-cyan-400" />
                 </div>
-                <div className="text-2xl sm:text-3xl font-bold">{SITE_CONFIG.projects}+</div>
+                <div className="text-2xl sm:text-3xl font-bold">
+                  {SITE_CONFIG.projects}+
+                </div>
                 <div className="text-xs text-gray-300 mt-1">Проектов</div>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-[rgb(0,91,137)]/30 rounded-full flex items-center justify-center mb-3">
                   <TrendingUp className="w-6 h-6 text-green-400" />
                 </div>
-                <div className="text-2xl sm:text-3xl font-bold">{SITE_CONFIG.company.experience}+</div>
+                <div className="text-2xl sm:text-3xl font-bold">
+                  {SITE_CONFIG.company.experience}+
+                </div>
                 <div className="text-xs text-gray-300 mt-1">Лет опыта</div>
               </div>
               <div className="flex flex-col items-center text-center">

@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ImageWithFallback } from "../../../components/figma/ImageWithFallback";
 
-interface ProductImage {
+export interface ProductImage {
   src: string;
   alt: string;
 }

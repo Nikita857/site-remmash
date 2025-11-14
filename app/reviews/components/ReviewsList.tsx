@@ -1,10 +1,9 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import { Star, Calendar } from 'lucide-react';
-import ReviewCard from './ReviewCard';
-import Pagination from './Pagination';
-import SortSelect from './SortSelect';
+import { motion } from "motion/react";
+import ReviewCard from "./ReviewCard";
+import Pagination from "./Pagination";
+import SortSelect from "./SortSelect";
 
 interface Review {
   id: number;
@@ -21,17 +20,17 @@ interface ReviewsListProps {
   totalPages: number;
   currentPage: number;
   paginate: (pageNumber: number) => void;
-  sortOption: 'newest' | 'rating';
-  setSortOption: (option: 'newest' | 'rating') => void;
+  sortOption: "newest" | "rating";
+  setSortOption: (option: "newest" | "rating") => void;
 }
 
-export default function ReviewsList({ 
-  reviews, 
-  totalPages, 
-  currentPage, 
-  paginate, 
-  sortOption, 
-  setSortOption 
+export default function ReviewsList({
+  reviews,
+  totalPages,
+  currentPage,
+  paginate,
+  sortOption,
+  setSortOption,
 }: ReviewsListProps) {
   return (
     <section className="py-20 bg-gray-50">
@@ -55,31 +54,24 @@ export default function ReviewsList({
           <div className="text-lg font-medium text-gray-700">
             Найдено отзывов: <span className="font-bold">{reviews.length}</span>
           </div>
-          
+
           <div>
-            <SortSelect 
-              sortOption={sortOption} 
-              setSortOption={setSortOption} 
-            />
+            <SortSelect sortOption={sortOption} setSortOption={setSortOption} />
           </div>
         </div>
 
         <div className="grid gap-8">
           {reviews.map((review, index) => (
-            <ReviewCard 
-              key={review.id} 
-              review={review} 
-              index={index}
-            />
+            <ReviewCard key={review.id} review={review} index={index} />
           ))}
         </div>
 
         {totalPages > 1 && (
           <div className="mt-16 flex justify-center">
-            <Pagination 
-              totalPages={totalPages} 
-              currentPage={currentPage} 
-              paginate={paginate} 
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              paginate={paginate}
             />
           </div>
         )}

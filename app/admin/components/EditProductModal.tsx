@@ -16,6 +16,7 @@ import {
 import { ProductWithCategory, ProductCategory } from "@/types";
 import { getProductCategories } from "@/lib/product-service";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/components/ui/utils";
 
 interface EditProductModalProps {
   product?: ProductWithCategory;
@@ -167,7 +168,7 @@ export function EditProductModal({
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             {/* Заголовок */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-linear-to-r from-gray-50 to-white">
               <h2 className="text-2xl font-bold text-gray-900">
                 {product ? "Редактировать продукт" : "Добавить продукт"}
               </h2>

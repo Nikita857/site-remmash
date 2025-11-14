@@ -1,8 +1,8 @@
 "use client";
 
+import { SITE_CONFIG } from "@/config";
 import { Mail, Phone, MapPin, ArrowUp } from "lucide-react";
 import { motion } from "motion/react";
-import { SITE_CONFIG } from "../config";
 
 export function Footer() {
   const scrollToTop = () => {

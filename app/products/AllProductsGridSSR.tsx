@@ -1,42 +1,31 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import ProductsGrid from './ProductsGrid';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  categorySlug: string;
-  price?: string;
-  slug?: string;
-}
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { DisplayProduct } from "@/types";
+import ProductsGrid from "./components/ProductsGrid";
 
 interface AllProductsGridSSRProps {
-  initialProducts: Product[];
+  initialProducts: DisplayProduct[];
   totalPages: number;
   currentPage: number;
 }
 
 // Вспомогательная функция для преобразования продукта API в формат компонента
-const mapApiProductToComponentProduct = (apiProduct: any): Product => ({
+const mapApiProductToComponentProduct = (apiProduct: any): DisplayProduct => ({
   id: apiProduct.id,
   title: apiProduct.name,
   description: apiProduct.shortDescription,
-  image: apiProduct.images[0] || '/placeholder-product.jpg',
+  image: apiProduct.images[0] || "/placeholder-product.jpg",
   category: apiProduct.category.name,
   categorySlug: apiProduct.category.slug,
-  price: apiProduct.price ? `от ${apiProduct.price} ₽` : undefined,
   slug: apiProduct.slug,
 });
 
 export default function AllProductsGridSSR({
   initialProducts,
   totalPages,
-  currentPage
+  currentPage,
 }: AllProductsGridSSRProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,7 +33,7 @@ export default function AllProductsGridSSR({
   const [products, setProducts] = useState(initialProducts);
   const [pagination, setPagination] = useState({
     totalPages,
-    currentPage
+    currentPage,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,35 +42,35 @@ export default function AllProductsGridSSR({
   const loadProductsForPage = async (page: number) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(`/api/products/all?page=${page}`);
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Продукты не найдены');
+          throw new Error("Продукты не найдены");
         }
         throw new Error(`Ошибка загрузки данных: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       // Обновляем состояние с новыми продуктами и информацией о пагинации
       const mappedProducts = data.products.map(mapApiProductToComponentProduct);
-      
+
       setProducts(mappedProducts);
       setPagination({
         totalPages: data.totalPages,
-        currentPage: data.currentPage
+        currentPage: data.currentPage,
       });
     } catch (err) {
-      console.error('Error loading products:', err);
-      setError(err instanceof Error ? err.message : 'Ошибка загрузки данных');
-      
+      console.error("Error loading products:", err);
+      setError(err instanceof Error ? err.message : "Ошибка загрузки данных");
+
       // Возвращаем к начальному состоянию в случае ошибки
       setProducts(initialProducts);
       setPagination({
         totalPages,
-        currentPage
+        currentPage,
       });
     } finally {
       setIsLoading(false);
@@ -91,24 +80,27 @@ export default function AllProductsGridSSR({
   // Обработка изменения страницы
   const handlePageChange = (page: number) => {
     // Обновляем URL параметры
-    const params = new URLSearchParams(searchParams?.toString() || '');
+    const params = new URLSearchParams(searchParams?.toString() || "");
     if (page === 1) {
-      params.delete('page');
+      params.delete("page");
     } else {
-      params.set('page', page.toString());
+      params.set("page", page.toString());
     }
 
     // Обновляем URL
     router.push(`?${params.toString()}`);
-    
+
     // Загружаем продукты для новой страницы
     loadProductsForPage(page);
   };
 
   // Эффект для отслеживания изменений URL и загрузки соответствующей страницы
   useEffect(() => {
-    const pageFromURL = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
-    
+    const pageFromURL = Math.max(
+      1,
+      parseInt(searchParams.get("page") || "1") || 1
+    );
+
     // Загружаем данные для страницы из URL, если она отличается от текущей
     if (pageFromURL !== pagination.currentPage) {
       loadProductsForPage(pageFromURL);

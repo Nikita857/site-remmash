@@ -1,20 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { SITE_CONFIG } from '@/config';
-import ProductsGrid from '../components/ProductsGrid';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  categorySlug: string;
-  price?: string;
-  slug?: string;
-}
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SITE_CONFIG } from "@/config";
+import { DisplayProduct } from "@/types";
+import ProductsGrid from "../components/ProductsGrid";
 
 interface ProductCategory {
   id: string;
@@ -29,7 +19,7 @@ interface ProductCategory {
 }
 
 interface PaginatedProducts {
-  products: Product[];
+  products: DisplayProduct[];
   totalCount: number;
   totalPages: number;
   currentPage: number;
@@ -44,7 +34,7 @@ interface ProductsGridWrapperProps {
 
 export default function ProductsGridWrapper({
   category,
-  initialData
+  initialData,
 }: ProductsGridWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -63,16 +53,18 @@ export default function ProductsGridWrapper({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/products/by-category/${category.slug}?page=${page}&limit=${SITE_CONFIG.pagination.defaultLimit}`);
+      const response = await fetch(
+        `/api/products/by-category/${category.slug}?page=${page}&limit=${SITE_CONFIG.pagination.defaultLimit}`
+      );
 
       if (!response.ok) {
         throw new Error(`Ошибка загрузки данных: ${response.status}`);
       }
 
       const result = await response.json();
-      
+
       if (!result.success || !result.data) {
-        throw new Error(result.error || 'Не удалось получить данные');
+        throw new Error(result.error || "Не удалось получить данные");
       }
 
       // Обновляем состояние с новыми продуктами и информацией о пагинации
@@ -84,7 +76,7 @@ export default function ProductsGridWrapper({
         hasPrevPage: result.data.hasPrevPage,
       });
     } catch (err) {
-      console.error('Error loading products:', err);
+      console.error("Error loading products:", err);
     } finally {
       setIsLoading(false);
     }
@@ -93,11 +85,11 @@ export default function ProductsGridWrapper({
   // Обработка изменения страницы
   const handlePageChange = (page: number) => {
     // Обновляем URL параметры
-    const params = new URLSearchParams(searchParams?.toString() || '');
+    const params = new URLSearchParams(searchParams?.toString() || "");
     if (page === 1) {
-      params.delete('page');
+      params.delete("page");
     } else {
-      params.set('page', page.toString());
+      params.set("page", page.toString());
     }
 
     // Обновляем URL
@@ -109,7 +101,10 @@ export default function ProductsGridWrapper({
 
   // Эффект для отслеживания изменений URL и загрузки соответствующей страницы
   useEffect(() => {
-    const pageFromURL = Math.max(1, parseInt(searchParams.get('page') || '1') || 1);
+    const pageFromURL = Math.max(
+      1,
+      parseInt(searchParams.get("page") || "1") || 1
+    );
 
     // Загружаем данные для страницы из URL, если она отличается от текущей
     if (pageFromURL !== pagination.currentPage) {

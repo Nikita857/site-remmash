@@ -1,26 +1,29 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from "motion/react";
+import { ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 interface SortSelectProps {
-  sortOption: 'newest' | 'rating';
-  setSortOption: (option: 'newest' | 'rating') => void;
+  sortOption: "newest" | "rating";
+  setSortOption: (option: "newest" | "rating") => void;
 }
 
-export default function SortSelect({ sortOption, setSortOption }: SortSelectProps) {
+export default function SortSelect({
+  sortOption,
+  setSortOption,
+}: SortSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const options = [
-    { value: 'newest', label: 'Сначала новые' },
-    { value: 'rating', label: 'По рейтингу' }
+    { value: "newest", label: "Сначала новые" },
+    { value: "rating", label: "По рейтингу" },
   ];
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const selectOption = (value: 'newest' | 'rating') => {
+  const selectOption = (value: "newest" | "rating") => {
     setSortOption(value);
     setIsOpen(false);
   };
@@ -28,13 +31,16 @@ export default function SortSelect({ sortOption, setSortOption }: SortSelectProp
   // Закрытие выпадающего списка при клике вне его
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -45,15 +51,15 @@ export default function SortSelect({ sortOption, setSortOption }: SortSelectProp
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <span>{options.find(opt => opt.value === sortOption)?.label}</span>
-        <motion.div 
+        <span>{options.find((opt) => opt.value === sortOption)?.label}</span>
+        <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
           <ChevronDown className="w-5 h-5 ml-2" />
         </motion.div>
       </button>
-      
+
       <AnimatePresence>
         {isOpen && (
           <motion.ul
@@ -64,11 +70,13 @@ export default function SortSelect({ sortOption, setSortOption }: SortSelectProp
             transition={{ duration: 0.15 }}
           >
             {options
-              .filter(option => option.value !== sortOption)
+              .filter((option) => option.value !== sortOption)
               .map((option) => (
                 <li key={option.value}>
                   <button
-                    onClick={() => selectOption(option.value as 'newest' | 'rating')}
+                    onClick={() =>
+                      selectOption(option.value as "newest" | "rating")
+                    }
                     className="w-full text-left px-4 py-2 hover:bg-[rgb(0,91,137)] hover:text-white transition-colors"
                   >
                     {option.label}

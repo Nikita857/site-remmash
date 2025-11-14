@@ -1,39 +1,45 @@
-'use client';
+"use client";
 
-import { FileText, Download, Send, Info, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion } from 'motion/react';
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import {
+  FileText,
+  Download,
+  Send,
+  Info,
+  Sparkles,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
 
 export function QuestionnaireSection() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const questionnaires = [
     {
-      title: 'Теплообменное оборудование',
-      description: 'Для расчета и подбора теплообменников кожухотрубного типа',
+      title: "Теплообменное оборудование",
+      description: "Для расчета и подбора теплообменников кожухотрубного типа",
       fields:
-        'Технические параметры, условия эксплуатации, требования к материалам',
-      color: 'from-blue-500 to-cyan-500',
+        "Технические параметры, условия эксплуатации, требования к материалам",
+      color: "from-blue-500 to-cyan-500",
     },
     {
-      title: 'Аппараты воздушного охлаждения',
-      description: 'Для проектирования АВО с учетом климатических условий',
-      fields: 'Расход, температура, давление, климатическая зона',
-      color: 'from-[rgb(0,91,137)] to-blue-600',
+      title: "Аппараты воздушного охлаждения",
+      description: "Для проектирования АВО с учетом климатических условий",
+      fields: "Расход, температура, давление, климатическая зона",
+      color: "from-[rgb(0,91,137)] to-blue-600",
     },
     {
-      title: 'Емкостное оборудование',
-      description: 'Для изготовления резервуаров, сепараторов и отстойников',
-      fields: 'Объем, давление, температура, характеристики среды',
-      color: 'from-purple-500 to-pink-500',
+      title: "Емкостное оборудование",
+      description: "Для изготовления резервуаров, сепараторов и отстойников",
+      fields: "Объем, давление, температура, характеристики среды",
+      color: "from-purple-500 to-pink-500",
     },
     {
-      title: 'Нестандартное оборудование',
-      description: 'Для разработки оборудования по индивидуальным требованиям',
-      fields: 'Техническое задание, чертежи, особые требования',
-      color: 'from-orange-500 to-red-500',
+      title: "Нестандартное оборудование",
+      description: "Для разработки оборудования по индивидуальным требованиям",
+      fields: "Техническое задание, чертежи, особые требования",
+      color: "from-orange-500 to-red-500",
     },
   ];
 

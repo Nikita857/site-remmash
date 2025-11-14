@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 const Label = React.forwardRef<
   HTMLLabelElement,
@@ -7,11 +7,11 @@ const Label = React.forwardRef<
   return (
     <label
       ref={ref}
-      className={`block text-sm font-medium text-gray-700 ${className || ''}`}
+      className={`block text-sm font-medium text-gray-700 ${className || ""}`}
       {...props}
     />
   );
 });
-Label.displayName = 'Label';
+Label.displayName = "Label";
 
 export { Label };

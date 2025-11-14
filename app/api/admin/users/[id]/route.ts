@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/prisma/client';
+import { NextRequest } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma/client";
 
 export async function GET(
   request: NextRequest,
@@ -10,12 +10,9 @@ export async function GET(
   try {
     // Проверяем сессию пользователя
     const session = await getServerSession(authOptions);
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return Response.json(
-        { error: 'Доступ запрещен' },
-        { status: 403 }
-      );
+
+    if (!session || session.user?.role !== "ADMIN") {
+      return Response.json({ error: "Доступ запрещен" }, { status: 403 });
     }
 
     const { id } = await params;
@@ -39,7 +36,7 @@ export async function GET(
 
     if (!user) {
       return Response.json(
-        { error: 'Пользователь не найден' },
+        { error: "Пользователь не найден" },
         { status: 404 }
       );
     }
@@ -49,12 +46,12 @@ export async function GET(
       data: user,
     });
   } catch (error) {
-    console.error('Ошибка получения пользователя:', error);
-    
+    console.error("Ошибка получения пользователя:", error);
+
     return Response.json(
-      { 
-        success: false, 
-        error: 'Ошибка сервера при получении пользователя' 
+      {
+        success: false,
+        error: "Ошибка сервера при получении пользователя",
       },
       { status: 500 }
     );
@@ -68,16 +65,14 @@ export async function PUT(
   try {
     // Проверяем сессию пользователя
     const session = await getServerSession(authOptions);
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return Response.json(
-        { error: 'Доступ запрещен' },
-        { status: 403 }
-      );
+
+    if (!session || session.user?.role !== "ADMIN") {
+      return Response.json({ error: "Доступ запрещен" }, { status: 403 });
     }
 
     const { id } = await params;
-    const { name, surname, department, email, phone, role, isActive } = await request.json();
+    const { name, surname, department, email, phone, role, isActive } =
+      await request.json();
 
     // Проверяем, существует ли пользователь
     const existingUser = await prisma.user.findUnique({
@@ -86,7 +81,7 @@ export async function PUT(
 
     if (!existingUser) {
       return Response.json(
-        { error: 'Пользователь не найден' },
+        { error: "Пользователь не найден" },
         { status: 404 }
       );
     }
@@ -101,9 +96,9 @@ export async function PUT(
 
     if (emailExists) {
       return Response.json(
-        { 
-          success: false, 
-          error: 'Пользователь с таким email уже существует' 
+        {
+          success: false,
+          error: "Пользователь с таким email уже существует",
         },
         { status: 400 }
       );
@@ -138,15 +133,15 @@ export async function PUT(
     return Response.json({
       success: true,
       data: updatedUser,
-      message: 'Пользователь успешно обновлен',
+      message: "Пользователь успешно обновлен",
     });
   } catch (error) {
-    console.error('Ошибка обновления пользователя:', error);
-    
+    console.error("Ошибка обновления пользователя:", error);
+
     return Response.json(
-      { 
-        success: false, 
-        error: 'Ошибка сервера при обновлении пользователя' 
+      {
+        success: false,
+        error: "Ошибка сервера при обновлении пользователя",
       },
       { status: 500 }
     );
@@ -160,12 +155,9 @@ export async function DELETE(
   try {
     // Проверяем сессию пользователя
     const session = await getServerSession(authOptions);
-    
-    if (!session || session.user?.role !== 'ADMIN') {
-      return Response.json(
-        { error: 'Доступ запрещен' },
-        { status: 403 }
-      );
+
+    if (!session || session.user?.role !== "ADMIN") {
+      return Response.json({ error: "Доступ запрещен" }, { status: 403 });
     }
 
     const { id } = await params;
@@ -173,7 +165,7 @@ export async function DELETE(
     // Проверяем, не является ли пользователь текущим администратором
     if (session.user?.id === id) {
       return Response.json(
-        { error: 'Нельзя удалить собственную учетную запись' },
+        { error: "Нельзя удалить собственную учетную запись" },
         { status: 400 }
       );
     }
@@ -185,7 +177,7 @@ export async function DELETE(
 
     if (!existingUser) {
       return Response.json(
-        { error: 'Пользователь не найден' },
+        { error: "Пользователь не найден" },
         { status: 404 }
       );
     }
@@ -197,15 +189,15 @@ export async function DELETE(
 
     return Response.json({
       success: true,
-      message: 'Пользователь успешно удален',
+      message: "Пользователь успешно удален",
     });
   } catch (error) {
-    console.error('Ошибка удаления пользователя:', error);
-    
+    console.error("Ошибка удаления пользователя:", error);
+
     return Response.json(
-      { 
-        success: false, 
-        error: 'Ошибка сервера при удалении пользователя' 
+      {
+        success: false,
+        error: "Ошибка сервера при удалении пользователя",
       },
       { status: 500 }
     );

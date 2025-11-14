@@ -21,8 +21,18 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  webpack: (config, { isServer }) => {
-    // Настройка для работы bcrypt в Next.js
+  
+  // Добавьте эту строку для Turbopack
+  turbopack: {},
+  
+  // Оставьте webpack конфиг для продакшн сборки
+  webpack: (config, { isServer, dev }) => {
+    // Отключаем кастомный webpack в dev режиме с Turbopack
+    if (dev) {
+      return config;
+    }
+    
+    // Настройка для работы bcrypt в Next.js (только для продакшн)
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -33,6 +43,7 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  
   // Security headers
   async headers() {
     return [
